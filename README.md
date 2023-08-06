@@ -15,3 +15,6 @@ cargo tauri build
 ```
 cargo tauri dev
 ```
+
+# Design
+https://www.figma.com/file/6Qoi06eiCu1F9POK5MPEbR/hal?type=design&node-id=0%3A1&mode=design&t=eL6Sizz0G5aZNnm7-1

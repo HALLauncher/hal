@@ -1,0 +1,71 @@
+@import url(../fonts.css);
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+    font-family: Ubuntu;
+
+    color: #fff;
+    background-image: url(../../assets/background.jpg);
+    background-size: 100% 100%;
+
+    pointer-events: none;
+}
+
+.area {
+    width: 100%;
+    height: 100%;
+
+    background: rgba(31, 31, 31, 0.65);
+    backdrop-filter: blur(7.5px);
+}
+
+.central {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+}
+
+.hoi4logo {
+    width: 500px;
+    height: 150px;
+    
+    top: 10%;
+
+    margin-bottom: 50px;
+}
+
+.status_text {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.hoi4logo img {
+    width: 100%;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bottom img {
+    width: 54px;
+
+    fill: #FFF;
+    opacity: 0.5;
+
+    margin-left: 17px;
+}
+
+.bottom img:first-child {
+    margin-left: 0;
+}

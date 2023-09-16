@@ -27,7 +27,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "ru.voidptr_t.hal",
+      "identifier": "ru.voidptrt.hal",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

@@ -1,26 +1,4 @@
-@import url(../fonts.css);
-
-body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-
-    font-family: Ubuntu;
-
-    color: #fff;
-    background-image: url(../../assets/background.jpg);
-    background-size: 100% 100%;
-
-    pointer-events: none;
-}
-
-.area {
-    width: 100%;
-    height: 100%;
-
-    background: rgba(31, 31, 31, 0.65);
-    backdrop-filter: blur(7.5px);
-}
+@import url(../base.css);
 
 .central {
     position: absolute;

@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default, PartialEq, Eq)]
 pub struct Descriptor {
     pub path: Option<String>,
     pub archive: Option<String>,

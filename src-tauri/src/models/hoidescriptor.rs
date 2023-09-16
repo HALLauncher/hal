@@ -39,7 +39,7 @@ impl FromFile<HoiDescriptor> for HoiDescriptor {
         };
         match descriptor.deserialize::<HoiDescriptor>() {
             Ok(descriptor) => Ok(descriptor),
-            Err(err) => Err("Could not parse descriptor".into()),
+            Err(_) => Err("Could not parse descriptor".into()),
         }
     }
 }

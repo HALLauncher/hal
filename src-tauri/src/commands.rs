@@ -17,15 +17,15 @@ pub fn get_mod(
 }
 
 #[tauri::command]
-pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
-    let Some(data_dir) = app.path_resolver().app_data_dir() else {
-        return Err("Could not find data directory".to_string());
-    };
+pub async fn get_mods_folder(app: tauri::AppHandle) -> Result<PathBuf, String> {
+    crate::utils::get_mods_folder(app).await
+}
 
-    let launcher_mods_dir = data_dir.join("mods");
-    if !launcher_mods_dir.exists() {
-        std::fs::create_dir_all(&launcher_mods_dir).expect("Could not create mods directory");
-    }
+#[tauri::command]
+pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
+    let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+        return Err("Could not get mods folder".to_string());
+    };
 
     let Some(docs) = dirs_next::document_dir() else {
         return Err("Could not find documents directory".to_string());
@@ -72,12 +72,39 @@ pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
     Ok(())
 }
 
-
 #[tauri::command]
-async fn update_mods(
+pub async fn update_mods(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
+    app: tauri::AppHandle
 ) -> Result<(), String> {
-    let _mods = state.mods.lock().unwrap();
+    let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+        return Err("Could not get mods folder".to_string());
+    };
+
+    let mut files = launcher_mods_dir.read_dir().unwrap();
+
+    while let Some(file) = files.next() {
+        let file = file.unwrap();
+        let path = file.path();
+        
+        if !path.is_file() || !path.extension().unwrap().to_str().unwrap().eq("mod") {
+            continue;
+        }
+
+        let Ok(content) = std::fs::read_to_string(path) else {
+            continue;
+        };
+
+        let Ok(m) = serde_json::from_str::<descriptor::Descriptor>(&content) else {
+            continue;
+        };
+
+        if let Ok(mods) = state.mods.lock().as_mut() {
+            if !mods.contains(&m) {
+                mods.push(m);
+            }
+        }
+    }
 
     Ok(())
 }

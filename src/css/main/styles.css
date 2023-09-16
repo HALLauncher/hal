@@ -1,1 +1,6 @@
 @import url(../base.css);
+
+.start_button {
+    margin-top: 10px;
+    background: #fff;
+}

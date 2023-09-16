@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 
-use tauri::Manager;
-
 use crate::models::{descriptor, hoidescriptor, FromFile};
+use tauri::ClipboardManager;
 
 #[tauri::command]
 pub fn get_mod(
@@ -50,32 +49,32 @@ pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
         };
 
         if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&path) {
-            let m = descriptor::Descriptor{
+            let m = descriptor::Descriptor {
                 archive: mod_.archive,
                 path: mod_.path,
                 name: mod_.name.unwrap(),
                 version: mod_.version,
                 supported_version: mod_.supported_version,
-                remote_file_id: mod_.remote_file_id
+                remote_file_id: mod_.remote_file_id,
             };
 
             let file_id = &m.remote_file_id;
             let name = &m.name;
 
             let filename = file_id.as_ref().unwrap_or(name);
-            
+
             let path = launcher_mods_dir.join(format!("{}{}", filename, ".mod"));
             let _ = std::fs::write(path, serde_json::to_string(&m).unwrap());
         }
     }
-    
+
     Ok(())
 }
 
 #[tauri::command]
 pub async fn update_mods(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
-    app: tauri::AppHandle
+    app: tauri::AppHandle,
 ) -> Result<(), String> {
     let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
         return Err("Could not get mods folder".to_string());
@@ -86,7 +85,7 @@ pub async fn update_mods(
     while let Some(file) = files.next() {
         let file = file.unwrap();
         let path = file.path();
-        
+
         if !path.is_file() || !path.extension().unwrap().to_str().unwrap().eq("mod") {
             continue;
         }
@@ -107,4 +106,23 @@ pub async fn update_mods(
     }
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn start_game(options: Vec<String>) -> Result<(), String> {
+    let Some(mut steam_dir) = steamlocate::SteamDir::locate() else {
+        return Err("Could not find steam directory".to_string());
+    };
+
+    match steam_dir.app(&394360) {
+        Some(app) => {
+            crate::utils::start_game(&app.path, options).await
+        }
+        None => {
+            let Ok(folder) = crate::utils::get_hoi_foler().await else {
+                return Err("Could not find hoi directory".to_string());
+            };
+            crate::utils::start_game(&folder, options).await
+        },
+    }
 }

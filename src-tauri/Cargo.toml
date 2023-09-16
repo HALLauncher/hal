@@ -21,6 +21,8 @@ tauri = { version = "1.2.4", features = ["api-all"] }
 tokio = { version = "1.32.0", features = ["full"] }
 dirs-next = "2.0.0"
 jomini = "0.22.2"
+steamlocate = "1.2.1"
+regex = "1.9.5"
 
 [features]
 # by default Tauri runs in production mode

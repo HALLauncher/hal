@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         invoke('update_mods').then(() => {
             status.textContent = 'Done';
 
+            appDataDir().then(console.log);
+
             document.location.replace('main.html');
 
         }).catch(err => {

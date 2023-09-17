@@ -10,6 +10,10 @@ body {
     color: #fff;
     background-image: url(../assets/background.jpg);
     background-size: 100% 100%;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+
+    user-select: none;
 }
 
 .area {

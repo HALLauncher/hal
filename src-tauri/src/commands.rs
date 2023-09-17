@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use crate::models::{descriptor, hoidescriptor, FromFile};
-use tauri::ClipboardManager;
 
 #[tauri::command]
 pub fn get_mod(
@@ -64,7 +63,12 @@ pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
             let filename = file_id.as_ref().unwrap_or(name);
 
             let path = launcher_mods_dir.join(format!("{}{}", filename, ".mod"));
-            let _ = std::fs::write(path, serde_json::to_string(&m).unwrap());
+            return tokio::fs::write(&path, serde_json::to_string(&m).unwrap())
+                .await
+                .map_err(|_| {
+                    info!("Could not write file {}", path.display());
+                    "Could not write file".to_string()
+                });
         }
     }
 
@@ -83,14 +87,17 @@ pub async fn update_mods(
     let mut files = launcher_mods_dir.read_dir().unwrap();
 
     while let Some(file) = files.next() {
-        let file = file.unwrap();
+        let Ok(file) = file else {
+            continue;
+        };
+
         let path = file.path();
 
         if !path.is_file() || !path.extension().unwrap().to_str().unwrap().eq("mod") {
             continue;
         }
 
-        let Ok(content) = std::fs::read_to_string(path) else {
+        let Ok(content) = tokio::fs::read_to_string(path).await else {
             continue;
         };
 
@@ -110,6 +117,7 @@ pub async fn update_mods(
 
 #[tauri::command]
 pub async fn start_game(options: Vec<String>) -> Result<(), String> {
+    info!("Starting game with options: {:?}", options);
     let Some(mut steam_dir) = steamlocate::SteamDir::locate() else {
         return Err("Could not find steam directory".to_string());
     };

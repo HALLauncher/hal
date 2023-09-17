@@ -58,7 +58,9 @@
         "resizable": true,
         "label": "loader",
         "width": 1200,
-        "url": "loader.html"
+        "url": "loader.html",
+        "minHeight": 600,
+        "minWidth": 800
       }
     ]
   }

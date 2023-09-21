@@ -3,8 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-use tauri::Manager;
-
 const LOG_TARGETS: [tauri_plugin_log::LogTarget; 3] = [tauri_plugin_log::LogTarget::Stdout, tauri_plugin_log::LogTarget::Webview, tauri_plugin_log::LogTarget::LogDir];
 
 #[macro_use] extern crate log;

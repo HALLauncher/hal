@@ -94,7 +94,7 @@ body {
 }
 
 .start_button {
-    padding: 10px;
+    padding: 0.2em;
 
     cursor: pointer;
 
@@ -109,7 +109,7 @@ body {
 .settings_button {
     cursor: pointer;
 
-    padding: 10px;
+    padding: 0.2em;
 
     border-radius: 5px;
     background: rgba(68, 68, 68, 0.50);

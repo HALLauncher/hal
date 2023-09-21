@@ -1,0 +1,128 @@
+@import url("fonts.css");
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+    font-family: Ubuntu;
+    font-size: 18px;
+
+    color: #fff;
+    background-image: url(../assets/background.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+    background-repeat: no-repeat;
+
+    user-select: none;
+    scroll-behavior: unset;
+    overflow: hidden;
+}
+
+.area {
+    width: 100%;
+    height: 100%;
+
+    background: rgba(31, 31, 31, 0.65);
+    backdrop-filter: blur(7.5px);
+}
+
+.central {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.hoi4logo {
+    width: 500px;
+    height: 150px;
+    
+    top: 10%;
+
+    margin-bottom: 3%;
+
+    pointer-events: none;
+}
+
+.hoi4logo img {
+    width: 90%;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bottom img {
+    width: 54px;
+
+    fill: #FFF;
+    opacity: 0.5;
+
+    margin-left: 17px;
+}
+
+.bottom img:first-child {
+    margin-left: 0;
+}
+
+.status_text {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.start_area {
+    margin-top: 10px;
+
+    display: grid;
+    grid-template-columns: 0.4fr auto;
+    gap: 10px;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.start_button {
+    padding: 10px;
+
+    cursor: pointer;
+
+    border-radius: 5px;
+    background: rgba(68, 68, 68, 0.50);
+}
+
+.hidden {
+    display: none;
+}
+
+.settings_button {
+    cursor: pointer;
+
+    padding: 10px;
+
+    border-radius: 5px;
+    background: rgba(68, 68, 68, 0.50);
+
+    font-size: 17px;
+}
+
+.start_button:hover {
+    transition: all 0.1s;
+    text-shadow: 0px 0px 5px #fff;
+}
+
+.settings_button:hover {
+    transition: all 0.1s;
+    text-shadow: 0px 0px 5px #fff;
+}

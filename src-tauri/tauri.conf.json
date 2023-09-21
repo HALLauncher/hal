@@ -56,7 +56,7 @@
         "fullscreen": false,
         "height": 700,
         "resizable": true,
-        "label": "loader",
+        "label": "main",
         "width": 1200,
         "url": "loader.html",
         "minHeight": 600,

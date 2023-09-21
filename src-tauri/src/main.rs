@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+use tauri::Manager;
+
 const LOG_TARGETS: [tauri_plugin_log::LogTarget; 3] = [tauri_plugin_log::LogTarget::Stdout, tauri_plugin_log::LogTarget::Webview, tauri_plugin_log::LogTarget::LogDir];
 
 #[macro_use] extern crate log;
@@ -20,6 +22,11 @@ fn main() {
             .with_colors(tauri_plugin_log::fern::colors::ColoredLevelConfig::default())
             .build()
         )
+        .on_window_event(|e| {
+            if let tauri::WindowEvent::Resized(_) = e.event() {
+                std::thread::sleep(std::time::Duration::from_nanos(1));
+            }
+        })
         .manage(launcher_state::LauncherState::default())
         .invoke_handler(tauri::generate_handler![
             commands::get_mod,

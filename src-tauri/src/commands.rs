@@ -22,10 +22,12 @@ pub async fn get_mods_folder(app: tauri::AppHandle) -> Result<PathBuf, String> {
 #[tauri::command]
 pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
     let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+        error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
     };
 
     let Some(docs) = dirs_next::document_dir() else {
+        error!("Could not find documents directory");
         return Err("Could not find documents directory".to_string());
     };
 
@@ -34,6 +36,7 @@ pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
         .join("Hearts of Iron IV")
         .join("mod");
     if !mod_foler.exists() || !mod_foler.is_dir() {
+        error!("Could not find mod directory");
         return Err("Could not find mod directory".to_string());
     };
 
@@ -66,7 +69,7 @@ pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
             return tokio::fs::write(&path, serde_json::to_string(&m).unwrap())
                 .await
                 .map_err(|_| {
-                    info!("Could not write file {}", path.display());
+                    error!("Could not write file {}", path.display());
                     "Could not write file".to_string()
                 });
         }
@@ -81,6 +84,7 @@ pub async fn update_mods(
     app: tauri::AppHandle,
 ) -> Result<(), String> {
     let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+        error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
     };
 
@@ -97,11 +101,13 @@ pub async fn update_mods(
             continue;
         }
 
-        let Ok(content) = tokio::fs::read_to_string(path).await else {
+        let Ok(content) = tokio::fs::read_to_string(&path).await else {
+            warn!("Could not read file {}", path.display());
             continue;
         };
 
         let Ok(m) = serde_json::from_str::<descriptor::Descriptor>(&content) else {
+            warn!("Could not parse file {}", path.display());
             continue;
         };
 
@@ -119,6 +125,7 @@ pub async fn update_mods(
 pub async fn start_game(options: Vec<String>) -> Result<(), String> {
     info!("Starting game with options: {:?}", options);
     let Some(mut steam_dir) = steamlocate::SteamDir::locate() else {
+        error!("Could not find steam directory");
         return Err("Could not find steam directory".to_string());
     };
 
@@ -128,6 +135,7 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
         }
         None => {
             let Ok(folder) = crate::utils::get_hoi_foler().await else {
+                error!("Could not find hoi directory");
                 return Err("Could not find hoi directory".to_string());
             };
             crate::utils::start_game(&folder, options).await

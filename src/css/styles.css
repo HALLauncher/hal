@@ -82,6 +82,10 @@ body {
     font-weight: 500;
 }
 
+.status_text_err {
+    text-decoration: underline;
+}
+
 .start_area {
     margin-top: 10px;
 

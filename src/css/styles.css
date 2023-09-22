@@ -9,7 +9,7 @@ body {
     font-size: 18px;
 
     color: #fff;
-    background-image: url(../assets/background.jpg);
+    background-image: url(/assets/background.jpg);
     background-size: cover;
     background-attachment: fixed;
     background-blend-mode: multiply;
@@ -64,7 +64,7 @@ body {
 }
 
 .bottom img {
-    width: 4em;
+    width: 3em;
 
     fill: #FFF;
     opacity: 0.5;

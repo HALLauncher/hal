@@ -1,8 +1,10 @@
 {
   "build": {
     "withGlobalTauri": false,
-    "devPath": "../src",
-    "distDir": "../src"
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build"
   },
   "package": {
     "productName": "hal",
@@ -11,6 +13,13 @@
   "tauri": {
     "allowlist": {
       "all": true
+    },
+    "cli": {
+      "args": [
+        {
+          "name": "skip_paradox_sync"
+        }
+      ]
     },
     "bundle": {
       "active": true,
@@ -58,7 +67,6 @@
         "resizable": true,
         "label": "main",
         "width": 1200,
-        "url": "loader.html",
         "minHeight": 600,
         "minWidth": 800
       }

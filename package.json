@@ -1,0 +1,21 @@
+{
+    "name": "hal",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc --noEmit && vite build",
+      "preview": "vite preview",
+      "tauri": "tauri"
+    },
+    "dependencies": {
+      "@tauri-apps/api": "^1.4.0"
+    },
+    "devDependencies": {
+      "typescript": "^5.0.2",
+      "vite": "^4.4.4",
+      "@tauri-apps/cli": "^1.4.0"
+    }
+  }
+  

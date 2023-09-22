@@ -17,7 +17,7 @@ tauri-build = { version = "1.2.1", features = [] }
 [dependencies]
 serde_json = "1.0.107"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2.4", features = ["api-all"] }
+tauri = { version = "1.2.4", features = [ "cli", "api-all"] }
 tokio = { version = "1.32.0", features = ["full"] }
 dirs-next = "2.0.0"
 jomini = "0.22.2"

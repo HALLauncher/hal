@@ -1,4 +1,5 @@
 @import url("fonts.css");
+@import url("overlay.css");
 
 body {
     margin: 0;
@@ -104,6 +105,8 @@ body {
 
     border-radius: 5px;
     background: rgba(68, 68, 68, 0.50);
+
+    transition: all 0.1s;
 }
 
 .hidden {
@@ -119,14 +122,14 @@ body {
     background: rgba(68, 68, 68, 0.50);
 
     font-size: 17px;
+
+    transition: all 0.1s;
 }
 
 .start_button:hover {
-    transition: all 0.1s;
     text-shadow: 0px 0px 5px #fff;
 }
 
 .settings_button:hover {
-    transition: all 0.1s;
     text-shadow: 0px 0px 5px #fff;
 }

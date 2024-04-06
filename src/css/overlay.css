@@ -1,0 +1,21 @@
+
+.popup_area {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+
+    padding: 3%;
+}
+
+.popup_window {
+    width: 94%;
+    height: 89%;
+
+    background: rgba(31, 31, 31, 0.65);
+    backdrop-filter: blur(7.5px);
+}

@@ -4,3 +4,4 @@ pub trait FromFile<T> {
 
 pub mod descriptor;
 pub mod hoidescriptor;
+pub mod modpack;

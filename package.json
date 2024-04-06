@@ -1,21 +1,22 @@
 {
-    "name": "hal",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-      "dev": "vite",
-      "build": "tsc --noEmit && vite build",
-      "preview": "vite preview",
-      "tauri": "tauri"
-    },
-    "dependencies": {
-      "@tauri-apps/api": "^1.4.0"
-    },
-    "devDependencies": {
-      "typescript": "^5.0.2",
-      "vite": "^4.4.4",
-      "@tauri-apps/cli": "^1.4.0"
-    }
+  "name": "hal",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.4.0",
+    "jquery": "^3.7.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.4.0",
+    "@types/jquery": "^3.5.20",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.4"
   }
-  
+}

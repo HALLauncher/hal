@@ -1,38 +1,58 @@
-import { invoke } from '@tauri-apps/api';
 import { open } from '@tauri-apps/api/shell';
 import { appLogDir } from '@tauri-apps/api/path';
+import { start_game, sync_with_paradox, update_mods } from "./wrapper";
+
+import $ from "jquery";
+
+let click_on_popup_window = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-    const status = document.querySelector('.status_text');
-    const start_area = document.querySelector('.start_area');
-    const start_button = document.querySelector('#start_button');
+    const status = $('.status_text');
+    const start_area = $('.start_area');
+    const start_button = $('#start_button');
 
-    invoke('sync_with_paradox').then(() => {
-        status!.textContent = 'Updating mods...';
+    sync_with_paradox().then(() => {
+        status.text('Updating mods...');
 
-        invoke('update_mods').then(() => {
-            status!.textContent = 'Done';
+        update_mods().then(() => {
+            status.text('Done');
 
-            status!.classList.add('hidden');
-            start_area!.classList.remove('hidden');
+            status.hide();
+            start_area.show();
+
+            $('.popup_window').on('click', () => {
+                click_on_popup_window = true;
+            });
+
+            $('.popup_area').on('click', () => {
+                if (click_on_popup_window) {
+                    click_on_popup_window = false;
+                    return;
+                }
+
+                $('#settings_window').hide(100);
+            });
+
+            $('.settings_button').on('click', () => {
+                $('#settings_window').show(100);
+            });
+
         }).catch(_ => {
-            status!.textContent = "Can't update mods";
+            status.text("Can't update mods");
         });
     }).catch(_ => {
-        status!.textContent = "Can't sync with paradox";
-        status!.setAttribute('title', 'Click to open logs');
-        status!.classList.add('status_text_err');
+        status.text("Can't sync with paradox");
+        status.attr('title', 'Click to open logs');
+        status.addClass('status_text_err');
 
-        status!.addEventListener('click', async _ => {
+        status.on('click', async _ => {
             console.log(await appLogDir())
             open((await appLogDir()).concat('hal.log'));
         })
     });
 
-    start_button!.addEventListener('click', () => {
-       invoke('start_game', { 
-            options: []
-       }).catch(err => {
+    start_button.on('click', () => {
+        start_game([]).catch(err => {
            console.log(err);
        });
     });

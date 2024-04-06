@@ -1,7 +1,20 @@
-# Tauri + Vanilla
+# **H**oi4 **A**lternative **L**oader (HAL)
+My attem to create alternative loader for [Hearts of Iron IV](https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/) and other paradox games
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
+# Build and Run
 
-## Recommended IDE Setup
+* Init
+```
+yarn
+```
+* Build
+```
+yarn tauri build
+```
+* Run
+```
+yarn tauri dev
+```
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+# Design
+https://www.figma.com/file/6Qoi06eiCu1F9POK5MPEbR/hal

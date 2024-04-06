@@ -1,0 +1,3 @@
+
+.hal-settings { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe800;&nbsp;'); }
+.hal-ok { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf801;&nbsp;'); }

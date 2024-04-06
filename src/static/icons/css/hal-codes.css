@@ -1,0 +1,3 @@
+
+.hal-settings:before { content: '\e800'; } /* '' */
+.hal-ok:before { content: '\f801'; } /* '' */

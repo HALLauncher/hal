@@ -16,6 +16,8 @@
 	// let promise = new Promise<void>(res => res());
 </script>
 
+<svelte:body on:contextmenu|preventDefault />
+
 <main>
 	{#await promise then}
 		<img src="/images/hoi4.png" alt="hoi4" />

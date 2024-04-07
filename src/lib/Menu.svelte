@@ -7,7 +7,7 @@
 		<Button content="Launch"/>
 		<Button icon="hal-settings" />
 	</div>
-	<Button content="Dropdown placeholder" />
+	<Button content="Dropdown placeholder" icon="hal-ok" />
 </div>
 
 <style>

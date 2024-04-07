@@ -14,7 +14,6 @@
     "@tauri-apps/api": "^1"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@tauri-apps/cli": "^1",
     "@tsconfig/svelte": "^5.0.2",

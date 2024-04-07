@@ -1,15 +1,14 @@
 <script lang="ts">
-	import "./styles.css";
 	import "./static/icons/css/hal.css";
-	import "./static/fonts/Ubuntu.css"
-	import "./static/fonts/UbuntuMono.css"
+	import "./static/Ubuntu.css"
+	import "./static/UbuntuMono.css"
 
-	import hoi_logo from "./static/images/hoi4.png";
-	import ogo from "./static/images/Ого.svg";
+	import hoi_logo from "/images/hoi4.png";
+	import ogo from "/images/Ого.svg";
 
+	import Menu from "./lib/Menu.svelte";
 	import Footer from "./lib/Footer.svelte";
 	import { start_game, sync_with_paradox, update_mods } from "./wrapper";
-	import Menu from "./lib/Menu.svelte";
 
 	let status = "Loading...";
 	let version = "14.8.8";

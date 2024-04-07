@@ -1,7 +1,22 @@
-# Tauri + Svelte + Typescript
+[![built with Codeium](https://codeium.com/badges/main)](https://codeium.com)
 
-This template should help get you started developing with Tauri, Svelte and TypeScript in Vite.
+# Hoi4 Alternative Loader (HAL)
+My attem to create alternative loader for [Hearts of Iron IV](https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/) and other paradox games
 
-## Recommended IDE Setup
+# Build and Run
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+* Init
+```
+yarn
+```
+* Build
+```
+yarn tauri build
+```
+* Run
+```
+yarn tauri dev
+```
+
+# Design
+https://www.figma.com/file/6Qoi06eiCu1F9POK5MPEbR/hal

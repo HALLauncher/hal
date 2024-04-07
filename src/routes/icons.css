@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'hal';
-  src: url('../font/hal.eot?66218105');
-  src: url('../font/hal.eot?66218105#iefix') format('embedded-opentype'),
-       url('../font/hal.woff2?66218105') format('woff2'),
-       url('../font/hal.woff?66218105') format('woff'),
-       url('../font/hal.ttf?66218105') format('truetype'),
-       url('../font/hal.svg?66218105#hal') format('svg');
+  src: url('/icons/font/hal.eot?66218105');
+  src: url('/icons/font/hal.eot?66218105#iefix') format('embedded-opentype'),
+       url('/icons/font/hal.woff2?66218105') format('woff2'),
+       url('/icons/font/hal.woff?66218105') format('woff'),
+       url('/icons/font/hal.ttf?66218105') format('truetype'),
+       url('/icons/font/hal.svg?66218105#hal') format('svg');
   font-weight: normal;
   font-style: normal;
 }

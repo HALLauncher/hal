@@ -1,9 +1,9 @@
 {
 	"build": {
-		"beforeDevCommand": "yarn dev",
 		"beforeBuildCommand": "yarn build",
-		"devPath": "http://localhost:1420",
-		"distDir": "../dist"
+		"beforeDevCommand": "yarn dev",
+		"devPath": "http://localhost:5173",
+		"distDir": "../build"
 	},
 	"package": {
 		"productName": "hal",
@@ -66,6 +66,7 @@
 				"height": 700,
 				"resizable": true,
 				"label": "main",
+				"title": "HAL",
 				"width": 1200,
 				"minHeight": 600,
 				"minWidth": 800

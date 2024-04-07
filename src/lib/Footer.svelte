@@ -1,11 +1,6 @@
-<script lang="ts">
-	import paradox from "/images/paradox.svg";
-	import lemi from "/images/lemi.svg";
-</script>
-
 <footer>
-	<img src={paradox} alt="paradox" />
-	<img src={lemi} alt="lemi" />
+	<img src="/images/paradox.svg" alt="paradox" />
+	<img src="/images/lemi.svg" alt="lemi" />
 </footer>
 
 <style>

@@ -31,11 +31,6 @@ body {
 	backdrop-filter: blur(7.5px);
 }
 
-#app {
-	height: 100%;
-	width: 100%;
-}
-
 /* Fontello margin */
 i::before {
 	margin: 0;

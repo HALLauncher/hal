@@ -1,32 +1,26 @@
 <script lang="ts">
-	import "./static/icons/css/hal.css";
-	import "./static/Ubuntu.css"
-	import "./static/UbuntuMono.css"
-
-	import hoi_logo from "/images/hoi4.png";
-	import ogo from "/images/Ого.svg";
-
-	import Menu from "./lib/Menu.svelte";
-	import Footer from "./lib/Footer.svelte";
-	import { start_game, sync_with_paradox, update_mods } from "./wrapper";
+	import Menu from "$lib/Menu.svelte";
+	import Footer from "$lib/Footer.svelte";
 
 	let status = "Loading...";
 	let version = "14.8.8";
 	let hash = "1488";
 
+	import { sync_with_paradox, update_mods } from "./wrapper";
+
 	let promise = sync_with_paradox()
 		.then(() => (status = "Updating mods..."))
 		.then(update_mods)
 		.then(() => (status = "Done!"));
-	
+
 	// let promise = new Promise<void>(res => res());
 </script>
 
 <main>
 	{#await promise then}
-		<img src={hoi_logo} alt="hoi4" />
+		<img src="/images/hoi4.png" alt="hoi4" />
 	{:catch}
-		<img src={ogo} alt="ogo" />
+		<img src="/images/Ого.svg" alt="ogo" />
 	{/await}
 
 	{#await promise}

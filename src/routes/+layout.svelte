@@ -1,7 +1,7 @@
 <script>
 	import './styles.css';
-	import './icons.css'
-	import './fonts.css'
+	import './fonts.css';
+	import './hal-icons.css';
 </script>
 
 <slot />

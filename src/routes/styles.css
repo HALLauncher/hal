@@ -37,5 +37,5 @@ img {
 
 /* Fontello margin */
 i::before {
-	margin: 0;
+	margin: 0 !important;
 }

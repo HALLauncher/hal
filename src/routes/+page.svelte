@@ -8,15 +8,17 @@
 
 	import { sync_with_paradox, update_mods } from "./wrapper";
 
-	let promise = sync_with_paradox()
-		.then(() => (status = "Updating mods..."))
-		.then(update_mods)
-		.then(() => (status = "Done!"));
+	// let promise = sync_with_paradox()
+	// 	.then(() => (status = "Updating mods..."))
+	// 	.then(update_mods)
+	// 	.then(() => (status = "Done!"));
 
-	// let promise = new Promise<void>(res => res());
+	let promise = new Promise<void>(res => res());
 </script>
 
 <svelte:body on:contextmenu|preventDefault />
+
+<Footer />
 
 <main>
 	{#await promise then}
@@ -36,7 +38,7 @@
 	{/await}
 </main>
 
-<Footer />
+
 
 <style>
 	main {
@@ -49,8 +51,6 @@
 		vertical-align: middle;
 		align-items: center;
 		gap: 8px;
-
-		text-align: center;
 	}
 
 	.status {

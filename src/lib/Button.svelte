@@ -3,7 +3,7 @@
 	export let icon = "";
 </script>
 
-<button class={content.length == 0 ? "icon-only" : ""}>
+<button class={content.length == 0 ? "icon-only" : ""} on:click>
 	{#if icon.length > 0}
 		<i class={icon}></i>
 	{/if}

@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-
 pub async fn get_mods_folder(app: tauri::AppHandle) -> Result<PathBuf, String> {
     let Some(data_dir) = app.path_resolver().app_data_dir() else {
         return Err("Could not find data directory".to_string());
@@ -33,9 +32,9 @@ pub async fn get_hoi_foler() -> Result<PathBuf, String> {
             else {
                 return Err("Could not find installdir".to_string());
             };
-            
+
             let p = cps.get(1).unwrap().as_str();
-            
+
             let path = libraryfolder.join("common").join(p);
             if !path.is_dir() {
                 return Err("Could not find hoi directory".to_string());
@@ -54,8 +53,8 @@ pub async fn start_game(path: &PathBuf, options: Vec<String>) -> Result<(), Stri
     };
 
     tokio::process::Command::new(game)
-                .args(options)
-                .spawn()
-                .map_err(|_| "Could not start game".to_string())
-                .map(|_| ())
+        .args(options)
+        .spawn()
+        .map_err(|_| "Could not start game".to_string())
+        .map(|_| ())
 }

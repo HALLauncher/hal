@@ -130,15 +130,13 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
     };
 
     match steam_dir.app(&394360) {
-        Some(app) => {
-            crate::utils::start_game(&app.path, options).await
-        }
+        Some(app) => crate::utils::start_game(&app.path, options).await,
         None => {
             let Ok(folder) = crate::utils::get_hoi_foler().await else {
                 error!("Could not find hoi directory");
                 return Err("Could not find hoi directory".to_string());
             };
             crate::utils::start_game(&folder, options).await
-        },
+        }
     }
 }

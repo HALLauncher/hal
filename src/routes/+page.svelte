@@ -8,15 +8,13 @@
 
 	import { sync_with_paradox, update_mods } from "./wrapper";
 
-	// let promise = sync_with_paradox()
-	// 	.then(() => (status = "Updating mods..."))
-	// 	.then(update_mods)
-	// 	.then(() => (status = "Done!"));
-
-	let promise = new Promise<void>(res => res());
+	let promise = window.__TAURI__
+		? sync_with_paradox()
+				.then(() => (status = "Updating mods..."))
+				.then(update_mods)
+				.then(() => (status = "Done!"))
+		: new Promise<void>(res => res());
 </script>
-
-<svelte:body on:contextmenu|preventDefault />
 
 <Footer />
 
@@ -37,8 +35,6 @@
 		<span class="error">{error}</span>
 	{/await}
 </main>
-
-
 
 <style>
 	main {

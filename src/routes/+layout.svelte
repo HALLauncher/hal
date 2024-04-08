@@ -4,4 +4,6 @@
 	import './hal-icons.css';
 </script>
 
+<svelte:body on:contextmenu|preventDefault />
+
 <slot />

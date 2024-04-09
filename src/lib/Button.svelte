@@ -1,9 +1,26 @@
 <script lang="ts">
 	export let content = "";
 	export let icon = "";
+
+	let x = 0,
+		y = 0;
+
+	function mouseMove(e: MouseEvent) {
+		const rect = (e.target as HTMLElement).getBoundingClientRect();
+		x = e.clientX - rect.left;
+		y = e.clientY - rect.top;
+	}
+
+	$: gradient = `radial-gradient(circle at ${x}px ${y}px, ${x && y ? "rgba(255, 255, 255, 0.2)" : "var(--btn-color)"}, var(--btn-color))`;
 </script>
 
-<button class={content.length == 0 ? "icon-only" : ""} on:click>
+<button
+	class={content.length == 0 ? "icon-only" : ""}
+	on:click
+	on:mousemove={mouseMove}
+	on:mouseleave={() => (x = y = 0)}
+	style:background={gradient}
+	>
 	{#if icon.length > 0}
 		<i class={icon}></i>
 	{/if}
@@ -12,6 +29,8 @@
 
 <style>
 	button {
+		--btn-color: rgba(68, 68, 68, 0.5);
+
     	border: 0;
 		display: flex;
 		flex-direction: row;
@@ -21,7 +40,7 @@
 		flex-grow: 1;
 		padding: 5px 10px;
 
-		background: rgba(68, 68, 68, 0.5);
+		/* background: var(--first-color); */
 		backdrop-filter: blur(2px);
 		border-radius: 5px;
 
@@ -37,9 +56,7 @@
 
 		gap: 10px;
 	
-		/* transition: .3s; */
-		outline: 2px solid transparent;
-		transition: outline-color 0.2s ease;
+		border: 2px solid transparent;
 		transition: .15s;
 	}
 
@@ -47,15 +64,8 @@
 		flex-grow: 0;
 		padding: 5px;
 	}
-	
+
 	button:active {
-		background: #fff;
-		color: #000;
-		transition: .15s;
+		transform: scale(0.98);
 	}
-
-	button:hover {
-		outline-color: #fff;
-	}
-
 </style>

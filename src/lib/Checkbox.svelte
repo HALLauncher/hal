@@ -43,9 +43,13 @@
         --check-char: "\F8003";
     }
 
-    .container:hover input ~ .checkmark {
-        background: #3A3A3A;
-    }
+	.container:hover input ~ .checkmark {
+		background: #3A3A3A;
+	}
+
+	.container:active input ~ .checkmark {
+		transform: scale(0.95);
+	}
 
     .container input:checked ~ .checkmark:after {
         content: var(--check-char);

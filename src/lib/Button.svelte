@@ -64,7 +64,6 @@
 	}
 
 	button::before {
-		--size: 0;
 		content: "";
 		position: absolute;
 		width: 100%;
@@ -79,6 +78,7 @@
 		border-radius: inherit;
   		transition: opacity .2s;
 		opacity: 0;
+		z-index: -1;
 	}
 
 	button:hover::before {

@@ -38,6 +38,8 @@
         justify-content: center;
         align-items: center;
         margin: 0px 7px 0px 0px;
+		
+		transition: .2s;
 
 		font-family: 'hal-icons';
         --check-char: "\F8003";

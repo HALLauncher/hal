@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { afterUpdate, createEventDispatcher } from "svelte";
+	import { fade } from "svelte/transition";
 
 	const dispatch = createEventDispatcher();
 
@@ -9,6 +10,7 @@
 
 <div
 	class="modal-background"
+	transition:fade={{ duration: 100 }}
 
 	role="button"
 	tabindex="0"

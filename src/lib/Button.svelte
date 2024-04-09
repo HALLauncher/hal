@@ -10,16 +10,14 @@
 		x = e.clientX - rect.left;
 		y = e.clientY - rect.top;
 	}
-
-	$: gradient = `radial-gradient(circle at ${x}px ${y}px, ${x && y ? "rgba(255, 255, 255, 0.2)" : "var(--btn-color)"}, var(--btn-color))`;
 </script>
 
 <button
-	class={content.length == 0 ? "icon-only" : ""}
-	on:click
+	class:icon-only={content.length === 0}
+	style:--x={x + "px"}
+	style:--y={y + "px"}
 	on:mousemove={mouseMove}
-	on:mouseleave={() => (x = y = 0)}
-	style:background={gradient}
+	on:click
 	>
 	{#if icon.length > 0}
 		<i class={icon}></i>
@@ -31,38 +29,60 @@
 	button {
 		--btn-color: rgba(68, 68, 68, 0.5);
 
-    	border: 0;
+		border: 0;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
+		gap: 10px;
 
 		flex-grow: 1;
 		padding: 5px 10px;
+		position: relative;
 
-		/* background: var(--first-color); */
+		background: var(--btn-color);
+		background-image: none;
 		backdrop-filter: blur(2px);
 		border-radius: 5px;
 
 		color: #fff;
-		
-		font-family: 'Ubuntu', sans-serif;
+
+		font-family: "Ubuntu", sans-serif;
 		font-weight: 400;
 		font-size: 22px;
 		line-height: 25px;
-		
+
 		height: 35px;
 		min-width: 35px;
 
-		gap: 10px;
-	
-		border: 2px solid transparent;
-		transition: .15s;
+		transition: .2s;
 	}
 
 	button.icon-only {
 		flex-grow: 0;
 		padding: 5px;
+	}
+
+	button::before {
+		--size: 0;
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		background: radial-gradient(
+			circle at var(--x) var(--y),
+			rgba(255, 255, 255, 0.2),
+			var(--btn-color)
+		);
+		border-radius: inherit;
+  		transition: opacity .2s;
+		opacity: 0;
+	}
+
+	button:hover::before {
+		opacity: 1;
 	}
 
 	button:active {

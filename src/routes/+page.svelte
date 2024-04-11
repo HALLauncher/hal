@@ -2,17 +2,17 @@
 	import Menu from "$lib/Menu.svelte";
 	import Footer from "$lib/Footer.svelte";
 
+	import { sync_with_paradox, update_mods } from "$lib/wrapper";
+
 	let status = "Loading...";
 	let version = "14.8.8";
 	let hash = "1488";
 
-	import { sync_with_paradox, update_mods } from "./wrapper";
-
 	let promise = window.__TAURI__
 		? sync_with_paradox()
-				.then(() => (status = "Updating mods..."))
-				.then(update_mods)
-				.then(() => (status = "Done!"))
+			.then(() => (status = "Updating mods..."))
+			.then(update_mods)
+			.then(() => (status = "Done!"))
 		: new Promise<void>(res => res());
 </script>
 

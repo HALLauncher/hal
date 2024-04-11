@@ -16,18 +16,18 @@
 	tabindex="0"
 
 	on:click|self={() => dispatch("close")}
-	on:keydown={(e) => e.key === "Escape" && dispatch("close")}
+	on:keydown={e => e.key === "Escape" && dispatch("close")}
 	bind:this={div}
 	>
-	<span>Press ESC to close this modal</span>
+	<span>Tap ESC to close this window</span>
 	<div class="content">
 		<slot/>
 	</div>
 </div>
 
 <style>
-    .modal-background {
-        position: absolute;
+	.modal-background {
+		position: absolute;
 		
 		display: flex;
 		flex-direction: column;
@@ -35,9 +35,9 @@
 		align-items: center;
 		gap: 10px;
 		
-        width: 100%;
-        height: 100%;
-    }
+		width: 100%;
+		height: 100%;
+	}
 
 	/* Yep, that is button */
 	.modal-background:focus {
@@ -45,8 +45,11 @@
 	}
 
 	span {
-		font-size: 12pt;
-		color: #E0E0E0;
+		pointer-events: none;
+		font-size: 12px;
+		color: #e0e0e0e0;
+		font-weight: 400;
+		font-family: 'Uwuntu';
 	}
 
 	.content {
@@ -58,6 +61,5 @@
 		
 		width: calc(100% - 140px);
 		height: calc(100% - 140px);
-
 	}
 </style>

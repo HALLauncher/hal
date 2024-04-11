@@ -47,7 +47,7 @@
 
 		color: #fff;
 
-		font-family: "Ubuntu", sans-serif;
+		font-family: "Uwuntu", sans-serif;
 		font-weight: 400;
 		font-size: 22px;
 		line-height: 25px;
@@ -76,7 +76,7 @@
 			var(--btn-color)
 		);
 		border-radius: inherit;
-  		transition: opacity .2s;
+		transition: opacity .2s;
 		opacity: 0;
 		z-index: -1;
 	}

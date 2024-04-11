@@ -1,72 +1,72 @@
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-Regular.ttf) format('truetype');
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-Bold.ttf) format('truetype');
 	font-weight: bold;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-Italic.ttf) format('truetype');
 	font-style: italic;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-BoldItalic.ttf) format('truetype');
 	font-weight: bold;
 	font-style: italic;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-Light.ttf);
 	font-weight: 300;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-LightItalic.ttf);
 	font-weight: 300;
 	font-style: italic;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-Medium.ttf);
 	font-weight: 500;
 }
 
 @font-face {
-	font-family: 'Ubuntu';
+	font-family: 'Uwuntu';
 	src: url(/fonts/Ubuntu-MediumItalic.ttf);
 	font-weight: 500;
 	font-style: italic;
 }
 
 @font-face {
-	font-family: 'UbuntuMono';
+	font-family: 'UwuntuMono';
 	src: url(/fonts/UbuntuMono-Regular.ttf) format('truetype');
 }
 
 @font-face {
-	font-family: 'UbuntuMono';
+	font-family: 'UwuntuMono';
 	src: url(/fonts/UbuntuMono-Bold.ttf) format('truetype');
 	font-weight: bold;
 }
 
 @font-face {
-	font-family: 'UbuntuMono';
+	font-family: 'UwuntuMono';
 	src: url(/fonts/UbuntuMono-Italic.ttf) format('truetype');
 	font-style: italic;
 }
 
 @font-face {
-	font-family: 'UbuntuMono';
+	font-family: 'UwuntuMono';
 	src: url(/fonts/UbuntuMono-BoldItalic.ttf) format('truetype');
 	font-weight: bold;
 	font-style: italic;

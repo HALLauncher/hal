@@ -22,14 +22,19 @@
 </script>
 
 <span class="label">{label}</span>
-<div class="container" on:click|self={focusToEnd}>
+<div class="container"
+	role="button"
+	tabindex="0"
+	on:click|self={focusToEnd}
+	on:keydown={() => null}
+	>
 	<span
 		class="input"
 		role="textbox"
 		contenteditable
 		bind:this={input}
 		bind:textContent={text}
-		on:input={input.focus}
+		on:input={() => input.focus()}
 	/>
 	<span class="additional">{additional}</span>
 </div>
@@ -53,7 +58,7 @@
 		font-family: "Uwuntu Mono", monospace;
 	}
 
-	span.input:focus {
+	span.input:focus, .container:focus {
 		/* outline: 1px solid #ffffff6f; */
 		outline: none;
 	}

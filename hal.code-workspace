@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "./src-tauri"
+		},
+		{
+			"path": "./src"
+		}
+	],
+	"settings": {
+		"editor.detectIndentation": false,
+		"editor.insertSpaces": false,
+		"editor.tabSize": 4
+	}
+}

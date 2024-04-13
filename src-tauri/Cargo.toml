@@ -21,6 +21,7 @@ jomini = "0.25.5" # "0.22.2"
 steamlocate = "1.2.1"
 regex = "1.9.5"
 log = "0.4.20"
+sysinfo = "*"
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 
 [features]

@@ -124,7 +124,7 @@ pub async fn update_mods(
 
 #[tauri::command]
 pub async fn start_game(options: Vec<String>) -> Result<(), String> {
-    if System::new_all().processes_by_exat_name("hoi4").next().is_some() {
+    if System::new_all().processes_by_exact_name("hoi4").next().is_some() {
         return Ok(());
     }
     info!("Starting game with options: {:?}", options);

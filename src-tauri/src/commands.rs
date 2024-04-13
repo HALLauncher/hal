@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::models::{descriptor, hoidescriptor, FromFile};
-use sysinfo::{ProcessExt, System, SystemExt};
+use sysinfo::System;
 
 #[tauri::command]
 pub fn get_mod(
@@ -124,9 +124,14 @@ pub async fn update_mods(
 
 #[tauri::command]
 pub async fn start_game(options: Vec<String>) -> Result<(), String> {
-    if System::new_all().processes_by_exact_name("hoi4").next().is_some() {
+    let mut s = System::new_all();
+    s.refresh_all();
+
+    if let Some(process) = s.processes_by_name("hoi4").next() {
+        info!("Game is already running {} {}", process.pid(), process.name());
         return Ok(());
     }
+
     info!("Starting game with options: {:?}", options);
     let Some(mut steam_dir) = steamlocate::SteamDir::locate() else {
         error!("Could not find steam directory");

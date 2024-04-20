@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::models::{descriptor, hoidescriptor, FromFile};
+use crate::models::{descriptor, hoidescriptor, modpack::Modpack, FromFile};
 use sysinfo::System;
 
 #[tauri::command]
@@ -119,6 +119,52 @@ pub async fn update_mods(
         }
     }
 
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn update_modpacks(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+    app: tauri::AppHandle,
+) -> Result<(), String> {
+    let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+        error!("Could not get modpacks folder");
+        return Err("Could not get modpacks folder".to_string());
+    };
+
+    let modpacks_dir = launcher_mods_dir.join("modpaks");
+    if !modpacks_dir.exists() {
+        std::fs::create_dir_all(&modpacks_dir).unwrap();
+    }
+
+    let mut files = modpacks_dir.read_dir().unwrap();
+    while let Some(file) = files.next() {
+        let Ok(file) = file else {
+            continue;
+        };
+
+        let path = file.path();
+
+        if !path.is_file() || !path.extension().unwrap().to_str().unwrap().eq("mod") {
+            continue;
+        }
+
+        let Ok(content) = tokio::fs::read_to_string(&path).await else {
+            warn!("Could not read file {}", path.display());
+            continue;
+        };
+
+        let Ok(m) = serde_json::from_str::<Modpack>(&content) else {
+            warn!("Could not parse file {}", path.display());
+            continue;
+        };
+
+        if let Ok(modpacks) = state.modpacks.lock().as_mut() {
+            if !modpacks.contains(&m) {
+                modpacks.push(m);
+            }
+        }
+    }
     Ok(())
 }
 

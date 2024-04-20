@@ -2,7 +2,7 @@
 	import Menu from "$lib/Menu.svelte";
 	import Footer from "$lib/Footer.svelte";
 
-	import { sync_with_paradox, update_mods } from "$lib/wrapper";
+	import { sync_with_paradox, update_mods, update_modpacks } from "$lib/wrapper";
 
 	let status = "Loading...";
 	let version = "14.8.8";
@@ -12,6 +12,8 @@
 		? sync_with_paradox()
 			.then(() => (status = "Updating mods..."))
 			.then(update_mods)
+			.then(() => (status = "Updating modpacks..."))
+			.then(update_modpacks)
 			.then(() => (status = "Done!"))
 		: new Promise<void>(res => res());
 </script>

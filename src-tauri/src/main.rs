@@ -36,7 +36,8 @@ fn main() {
             commands::sync_with_paradox,
             commands::update_mods,
             commands::get_mods_folder,
-            commands::start_game
+            commands::start_game,
+            commands::update_modpacks
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -2,14 +2,15 @@
 	import Menu from "$lib/Menu.svelte";
 	import Footer from "$lib/Footer.svelte";
 
-	import { sync_with_paradox, update_mods, update_modpacks } from "$lib/wrapper";
+	import { sync_with_paradox, update_mods, update_modpacks, get_launcher_info } from "$lib/wrapper";
 
 	let status = "Loading...";
-	let version = "14.8.8";
-	let hash = "1488";
+	let version = "Loading...";
 
 	let promise = window.__TAURI__
 		? sync_with_paradox()
+			.then(get_launcher_info)
+			.then(({ version: ver }) => (version = ver))
 			.then(() => (status = "Updating mods..."))
 			.then(update_mods)
 			.then(() => (status = "Updating modpacks..."))
@@ -30,7 +31,7 @@
 	{#await promise}
 		<span class="status">{status}</span>
 	{:then}
-		<span class="version">HEARTS OF IRON IV VERSION {version} ({hash})</span>
+		<span class="version">HEARTS OF IRON IV VERSION {version}</span>
 		<Menu />
 	{:catch error}
 		<span class="status errored">Fatal error occurred</span>

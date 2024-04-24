@@ -15,7 +15,7 @@ pub async fn get_mods_folder(app: tauri::AppHandle) -> Result<PathBuf, String> {
     Ok(launcher_mods_dir)
 }
 
-pub async fn get_hoi_foler() -> Result<PathBuf, String> {
+pub async fn get_hoi_folder() -> Result<PathBuf, String> {
     let Some(mut steam_dir) = steamlocate::SteamDir::locate() else {
         return Err("Could not find steam directory".to_string());
     };

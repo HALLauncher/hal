@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 
-use crate::models::{descriptor, hoidescriptor, modpack::Modpack, FromFile};
+use crate::{
+    launcher_state::LauncherInfo,
+    models::{descriptor, hoidescriptor, modpack::Modpack, FromFile},
+};
 use sysinfo::System;
 
 #[tauri::command]
@@ -21,7 +24,10 @@ pub async fn get_mods_folder(app: tauri::AppHandle) -> Result<PathBuf, String> {
 }
 
 #[tauri::command]
-pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
+pub async fn sync_with_paradox(
+    app: tauri::AppHandle,
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+) -> Result<(), String> {
     let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
         error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
@@ -67,14 +73,54 @@ pub async fn sync_with_paradox(app: tauri::AppHandle) -> Result<(), String> {
             let filename = file_id.as_ref().unwrap_or(name);
 
             let path = launcher_mods_dir.join(format!("{}{}", filename, ".mod"));
-            return tokio::fs::write(&path, serde_json::to_string(&m).unwrap())
+            tokio::fs::write(&path, serde_json::to_string(&m).unwrap())
                 .await
                 .map_err(|_| {
                     error!("Could not write file {}", path.display());
                     "Could not write file".to_string()
-                });
+                })?;
         }
     }
+
+    let Some(mut steam_dir) = steamlocate::SteamDir::locate() else {
+        error!("Could not find steam directory");
+        return Err("Could not find steam directory".to_string());
+    };
+
+    let laucner_settings_file = match steam_dir.app(&394360) {
+        Some(app) => app.path.join("launcher-settings.json"),
+        None => {
+            let Ok(folder) = crate::utils::get_hoi_folder().await else {
+                error!("Could not find hoi directory");
+                return Err("Could not find hoi directory".to_string());
+            };
+            folder.join("launcher-settings.json")
+        }
+    };
+
+    if !laucner_settings_file.exists() || !laucner_settings_file.is_file() {
+        error!("Could not find launcher-settings.json");
+        return Err("Could not find launcher-settings.json".to_string());
+    }
+
+    let Ok(content) = tokio::fs::read_to_string(&laucner_settings_file).await else {
+        error!("Could not read launcher-settings.json");
+        return Err("Could not read launcher-settings.json".to_string());
+    };
+
+    let Ok(launcher_settings) = serde_json::from_str::<LauncherInfo>(&content) else {
+        error!("Could not parse launcher-settings.json");
+        return Err("Could not parse launcher-settings.json".to_string());
+    };
+
+    state
+        .info
+        .lock()
+        .and_then(|mut x| {
+            *x = launcher_settings.clone();
+            Ok(())
+        })
+        .map_err(|_| "Could not write launcher-settings.json".to_string())?;
 
     Ok(())
 }
@@ -174,7 +220,11 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
     s.refresh_all();
 
     if let Some(process) = s.processes_by_name("hoi4").next() {
-        info!("Game is already running {} {}", process.pid(), process.name());
+        info!(
+            "Game is already running {} {}",
+            process.pid(),
+            process.name()
+        );
         return Ok(());
     }
 
@@ -187,11 +237,22 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
     match steam_dir.app(&394360) {
         Some(app) => crate::utils::start_game(&app.path, options).await,
         None => {
-            let Ok(folder) = crate::utils::get_hoi_foler().await else {
+            let Ok(folder) = crate::utils::get_hoi_folder().await else {
                 error!("Could not find hoi directory");
                 return Err("Could not find hoi directory".to_string());
             };
             crate::utils::start_game(&folder, options).await
         }
     }
+}
+
+#[tauri::command]
+pub async fn get_launcher_info(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+) -> Result<LauncherInfo, String> {
+    state
+        .info
+        .lock()
+        .and_then(|x| Ok(x.clone()))
+        .map_err(|_| "Could not get launcher info".to_string())
 }

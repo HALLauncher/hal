@@ -31,7 +31,7 @@
 	{#await promise}
 		<span class="status">{status}</span>
 	{:then}
-		<span class="version">HEARTS OF IRON IV VERSION {version}</span>
+		<span class="version">HEARTS OF IRON IV {version}</span>
 		<Menu />
 	{:catch error}
 		<span class="status errored">Fatal error occurred</span>

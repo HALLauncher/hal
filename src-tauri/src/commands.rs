@@ -120,9 +120,7 @@ pub async fn sync_with_paradox(
             *x = launcher_settings.clone();
             Ok(())
         })
-        .map_err(|_| "Could not write launcher-settings.json".to_string())?;
-
-    Ok(())
+        .map_err(|_| "Could not write launcher-settings.json".to_string())
 }
 
 #[tauri::command]

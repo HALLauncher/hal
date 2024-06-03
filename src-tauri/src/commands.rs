@@ -4,7 +4,9 @@ use crate::{
     launcher_state::LauncherInfo,
     models::{descriptor, hoidescriptor, modpack::Modpack, FromFile},
 };
+//use hal_steam_tools::WorkshopItem;
 use sysinfo::System;
+use tauri::Manager;
 
 #[tauri::command]
 pub fn get_mod(
@@ -254,3 +256,42 @@ pub async fn get_launcher_info(
         .and_then(|x| Ok(x.clone()))
         .map_err(|_| "Could not get launcher info".to_string())
 }
+
+#[tauri::command]
+pub async fn get_mods(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+) -> Result<Vec<descriptor::Descriptor>, String> {
+    state
+        .mods
+        .lock()
+        .and_then(|x| Ok(x.clone()))
+        .map_err(|_| "Could not get mods".to_string())
+}
+
+#[tauri::command]
+pub async fn get_modpacks(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+) -> Result<Vec<Modpack>, String> {
+    state
+        .modpacks
+        .lock()
+        .and_then(|x| Ok(x.clone()))
+        .map_err(|_| "Could not get modpacks".to_string())
+}
+
+// #[tauri::command]
+// pub async fn get_steamworkshop_item(app: tauri::AppHandle, state: tauri::State<'_, crate::SteamApi>, id: u64) -> Result<(), String> {
+//     let state = state.clone();
+//     state.lock().await.get_workshop_item(id, |info| {
+//         if info.is_none() {
+//             error!("Workshop item not found {:#?}", id);
+//             return;
+//         };
+
+//         info!("Workshop item: {:#?}", &info.unwrap());
+
+//         app.emit_all("workshop_item", info.unwrap());
+//     });
+
+//     Ok(())
+// }

@@ -23,6 +23,7 @@ regex = "1.9.5"
 log = "0.4.20"
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 sysinfo = "0.30.10"
+tauri-plugin-hal-steamworks = { git = "https://github.com/HALLauncher/hal-steam-tools.git", version = "*" }
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

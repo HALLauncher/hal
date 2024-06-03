@@ -25,6 +25,7 @@ fn main() {
                 // .with_colors(tauri_plugin_log::fern::colors::ColoredLevelConfig::default())
                 .build(),
         )
+        .plugin(tauri_plugin_hal_steamworks::init())
         .on_window_event(|e| {
             if let tauri::WindowEvent::Resized(_) = e.event() {
                 std::thread::sleep(std::time::Duration::from_nanos(1));
@@ -38,7 +39,8 @@ fn main() {
             commands::get_mods_folder,
             commands::start_game,
             commands::update_modpacks,
-            commands::get_launcher_info
+            commands::get_launcher_info,
+            commands::get_mods,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

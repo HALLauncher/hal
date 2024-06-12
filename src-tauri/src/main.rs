@@ -41,6 +41,7 @@ fn main() {
             commands::update_modpacks,
             commands::get_launcher_info,
             commands::get_mods,
+            commands::get_modpacks
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

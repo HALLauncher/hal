@@ -4,9 +4,8 @@ use crate::{
     launcher_state::LauncherInfo,
     models::{descriptor, hoidescriptor, modpack::Modpack, FromFile},
 };
-//use hal_steam_tools::WorkshopItem;
+
 use sysinfo::System;
-use tauri::Manager;
 
 #[tauri::command]
 pub fn get_mod(
@@ -158,12 +157,24 @@ pub async fn update_mods(
             continue;
         };
 
+        let tmp_m = m.clone();
+        let path = tmp_m.path.unwrap_or(tmp_m.archive.unwrap_or("".to_string()));
+
+        if tokio::fs::try_exists(path).await.is_err() {
+            if tokio::fs::remove_file(file.path()).await.is_err() {
+                warn!("Could not remove file {:?}", file.path().display());
+            }
+            continue;
+        }
+
         if let Ok(mods) = state.mods.lock().as_mut() {
             if !mods.contains(&m) {
                 mods.push(m);
             }
         }
     }
+
+
 
     Ok(())
 }
@@ -278,20 +289,3 @@ pub async fn get_modpacks(
         .and_then(|x| Ok(x.clone()))
         .map_err(|_| "Could not get modpacks".to_string())
 }
-
-// #[tauri::command]
-// pub async fn get_steamworkshop_item(app: tauri::AppHandle, state: tauri::State<'_, crate::SteamApi>, id: u64) -> Result<(), String> {
-//     let state = state.clone();
-//     state.lock().await.get_workshop_item(id, |info| {
-//         if info.is_none() {
-//             error!("Workshop item not found {:#?}", id);
-//             return;
-//         };
-
-//         info!("Workshop item: {:#?}", &info.unwrap());
-
-//         app.emit_all("workshop_item", info.unwrap());
-//     });
-
-//     Ok(())
-// }

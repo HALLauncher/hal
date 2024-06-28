@@ -5,6 +5,8 @@ use crate::{
     models::{descriptor, hoidescriptor, modpack::Modpack, FromFile},
 };
 
+use tauri_plugin_hal_steamworks::filesystem;
+
 use sysinfo::System;
 
 #[tauri::command]
@@ -21,7 +23,7 @@ pub fn get_mod(
 
 #[tauri::command]
 pub async fn get_mods_folder(app: tauri::AppHandle) -> Result<PathBuf, String> {
-    crate::utils::get_mods_folder(app).await
+    filesystem::get_mods_folder(app).await
 }
 
 #[tauri::command]
@@ -29,7 +31,7 @@ pub async fn sync_with_paradox(
     app: tauri::AppHandle,
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<(), String> {
-    let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+    let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app).await else {
         error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
     };
@@ -59,6 +61,13 @@ pub async fn sync_with_paradox(
         };
 
         if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&path) {
+            info!("Found mod: {:#?}", mod_);
+
+            if mod_.name.is_none() {
+                warn!("Could not get name from mod {}", path.display());
+                continue;
+            }
+
             let m = descriptor::Descriptor {
                 archive: mod_.archive,
                 path: mod_.path,
@@ -91,7 +100,7 @@ pub async fn sync_with_paradox(
     let laucner_settings_file = match steam_dir.app(&394360) {
         Some(app) => app.path.join("launcher-settings.json"),
         None => {
-            let Ok(folder) = crate::utils::get_hoi_folder().await else {
+            let Ok(folder) = filesystem::get_hoi_folder().await else {
                 error!("Could not find hoi directory");
                 return Err("Could not find hoi directory".to_string());
             };
@@ -129,7 +138,7 @@ pub async fn update_mods(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
     app: tauri::AppHandle,
 ) -> Result<(), String> {
-    let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+    let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app).await else {
         error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
     };
@@ -184,7 +193,7 @@ pub async fn update_modpacks(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
     app: tauri::AppHandle,
 ) -> Result<(), String> {
-    let Ok(launcher_mods_dir) = crate::utils::get_mods_folder(app).await else {
+    let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app).await else {
         error!("Could not get modpacks folder");
         return Err("Could not get modpacks folder".to_string());
     };
@@ -246,13 +255,13 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
     };
 
     match steam_dir.app(&394360) {
-        Some(app) => crate::utils::start_game(&app.path, options).await,
+        Some(app) => filesystem::start_game(&app.path, options).await,
         None => {
-            let Ok(folder) = crate::utils::get_hoi_folder().await else {
+            let Ok(folder) = filesystem::get_hoi_folder().await else {
                 error!("Could not find hoi directory");
                 return Err("Could not find hoi directory".to_string());
             };
-            crate::utils::start_game(&folder, options).await
+            filesystem::start_game(&folder, options).await
         }
     }
 }

@@ -15,7 +15,6 @@ extern crate log;
 mod commands;
 mod launcher_state;
 mod models;
-mod utils;
 
 fn main() {
     tauri::Builder::default()

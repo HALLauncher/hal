@@ -58,29 +58,113 @@
   }
 </script>
 
-<div class="moditem">
-  {#if mod}
-    <img class="icon" src={icon ?? "/images/Ого.svg"} alt="" />
-    <span class="label">{mod.name}</span>
-    <Button on:click={openFolder} content="Open folder" />
-  {/if}
-</div>
+{#if mod}
+	<div class="moditem">
+		<div class="info-container">
+			<img class="icon" src={icon ?? "/images/Ого.svg"} alt="" />
+			<div class="info">
+				<h3>{mod.name}</h3>
+				{#if mod.remote_file_id}
+					<span class="id">{mod.remote_file_id}</span>
+				{/if}
+			</div>
+		</div>
+		<div class="controls-container">
+			<div class="info-circle">
+				<i class="hal-ok"></i>
+			</div>
+			<div class="buttons">
+				<Button
+					--size="26px"
+					--font-size="16px"
+					--btn-color="rgba(31, 31, 31, 0.44)"
+					--hover-color="rgba(160, 160, 160, 0.2)"
+					icon="hal-check"
+					>
+				</Button>
+				<Button
+					--size="26px"
+					--font-size="16px"
+					--btn-color="rgba(31, 31, 31, 0.44)"
+					--hover-color="rgba(160, 160, 160, 0.2)"
+					icon="hal-settings"
+					>
+				</Button>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <style>
-  .moditem {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-  }
+	.moditem {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 
-  .label {
-    font-weight: 400;
-    font-size: 20px;
-  }
+		padding: 10px;
 
-  .icon {
-    width: 64px;
-    height: 64px;
+		border-radius: 5px;
+
+		background: #4e4e4e71;
+	}
+
+	.info-container {	
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		gap: 5px;
+	}
+
+	.info-container .icon {
+		width: 54px;
+		height: 54px;
+
+		border-radius: 5px;
+	}
+
+	.info-container .info {
+		display: flex;
+		flex-direction: column;
+
+		gap: 5px;
+
+		font-size: 16px;
+	}
+
+	.controls-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+
+	.controls-container .info-circle {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		background: #1F1F1F;
+		color: #fff;
+
+		font-size: 10px;
+
+		opacity: .44;
+
+		cursor: help;
+	}
+
+	.controls-container .buttons {
+		display: flex;
+		flex-direction: row;
+		gap: 5px;
+	}
+
+  .id {
+    font-size: 10px;
   }
 </style>

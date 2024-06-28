@@ -26,9 +26,15 @@
 </button>
 
 <style>
-	button {
+	:root {
 		--btn-color: rgba(68, 68, 68, 0.5);
+		--hover-color: rgba(255, 255, 255, 0.2);
 
+		--size: 35px;
+		--font-size: 22px;
+	}
+
+	button {
 		border: 0;
 		display: flex;
 		flex-direction: row;
@@ -49,11 +55,10 @@
 
 		font-family: "Uwuntu", sans-serif;
 		font-weight: 400;
-		font-size: 22px;
-		line-height: 25px;
+		font-size: var(--font-size);
 
-		height: 35px;
-		min-width: 35px;
+		height: var(--size);
+		min-width: var(--size);
 
 		transition: .2s;
 	}
@@ -72,7 +77,7 @@
 		top: 0;
 		background: radial-gradient(
 			circle at var(--x) var(--y),
-			rgba(255, 255, 255, 0.2),
+			var(--hover-color),
 			var(--btn-color)
 		);
 		border-radius: inherit;

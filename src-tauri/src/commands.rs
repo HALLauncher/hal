@@ -336,7 +336,6 @@ pub async fn apply_modpack(
 
 #[tauri::command]
 pub async fn start_game(
-    app: tauri::AppHandle,
     options: Vec<String>,
     modpack: Option<Uuid>,
     state: tauri::State<'_, crate::launcher_state::LauncherState>,

@@ -79,7 +79,7 @@
 {#if mod}
 	<div class="moditem">
 		<div class="info-container">
-			<img class="icon" src={icon ?? "/images/Ого.svg"} alt="" />
+			<img class="icon" src={icon || "/images/Ого.svg"} alt="" />
 			<div class="info">
 				<span class="mod-status">
 					{#if mod.remote_file_id}

@@ -23,7 +23,7 @@ regex = "1.9.5"
 log = "0.4.20"
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 sysinfo = "0.30.10"
-tauri-plugin-hal-steamworks = "0.0.2"
+tauri-plugin-hal-steamworks = "0.0.3"
 uuid = { version = "1.9.1", features = ["fast-rng", "serde", "v3", "v4", "v8"] }
 pathdiff = "0.2.1"
 

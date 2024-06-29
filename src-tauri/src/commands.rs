@@ -1,23 +1,32 @@
-use std::path::PathBuf;
+use std::{
+    collections::HashMap,
+    fmt::format,
+    path::{Path, PathBuf},
+};
 
 use crate::{
     launcher_state::LauncherInfo,
-    models::{descriptor, hoidescriptor, modpack::Modpack, FromFile, HashTarget},
+    models::{
+        descriptor, hoidescriptor,
+        modpack::{self, Modpack},
+        FromFile, HashTarget,
+    },
 };
 
+use serde_json::json;
 use tauri_plugin_hal_steamworks::filesystem;
 
 use sysinfo::System;
 use uuid::Uuid;
 
 #[tauri::command]
-pub fn get_mod(
+pub async fn get_mod(
     hash: String,
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<crate::models::descriptor::Descriptor, String> {
     let uuid = Uuid::parse_str(&hash).unwrap();
 
-    let mods = state.mods.lock().unwrap();
+    let mods = state.mods.lock().await;
     match mods.get(&uuid) {
         Some(mod_) => Ok(mod_.clone()),
         None => Err("Mod not found".to_string()),
@@ -100,9 +109,12 @@ pub async fn sync_with_paradox(
                 uuid: None,
             };
 
-            m.uuid = Some(Uuid::new_v3(&Uuid::NAMESPACE_OID, m.hash_target().as_bytes()));
+            m.uuid = Some(Uuid::new_v3(
+                &Uuid::NAMESPACE_OID,
+                m.hash_target().as_bytes(),
+            ));
 
-            if state.mods.lock().unwrap().contains_key(&m.uuid.unwrap()) {
+            if state.mods.lock().await.contains_key(&m.uuid.unwrap()) {
                 continue;
             }
 
@@ -147,13 +159,9 @@ pub async fn sync_with_paradox(
         return Err("Could not parse launcher-settings.json".to_string());
     };
 
-    state
-        .info
-        .lock()
-        .map(|mut x| {
-            *x = launcher_settings.clone();
-        })
-        .map_err(|_| "Could not write launcher-settings.json".to_string())
+    *state.info.lock().await = launcher_settings.clone();
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -201,9 +209,7 @@ pub async fn update_mods(
             continue;
         }
 
-        if let Ok(mods) = state.mods.lock().as_mut() {
-            mods.insert(m.uuid.unwrap(), m);
-        }
+        state.mods.lock().await.insert(m.uuid.unwrap(), m);
     }
 
     Ok(())
@@ -219,7 +225,7 @@ pub async fn update_modpacks(
         return Err("Could not get modpacks folder".to_string());
     };
 
-    let modpacks_dir = launcher_mods_dir.join("modpaks");
+    let modpacks_dir = launcher_mods_dir.join("modpacks");
     if !modpacks_dir.exists() {
         std::fs::create_dir_all(&modpacks_dir).unwrap();
     }
@@ -246,17 +252,79 @@ pub async fn update_modpacks(
             continue;
         };
 
-        if let Ok(modpacks) = state.modpacks.lock().as_mut() {
-            if !modpacks.contains(&m) {
-                modpacks.push(m);
-            }
-        }
+        state.modpacks.lock().await.insert(m.uuid, m);
     }
     Ok(())
 }
 
+pub async fn apply_modpack(
+    app: tauri::AppHandle,
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+    modpack: Uuid,
+) -> Result<(), String> {
+    let Some(modpack) = state.modpacks.lock().await.get(&modpack).cloned() else {
+        return Err("Could not find modpack".to_string());
+    };
+
+    let Some(docs) = dirs_next::document_dir() else {
+        error!("Could not find documents directory");
+        return Err("Could not find documents directory".to_string());
+    };
+
+    let datafoler = docs.join("Paradox Interactive").join("Hearts of Iron IV");
+
+    let dlcload = datafoler.join("dlc_load.json");
+    if !dlcload.exists() || !dlcload.is_file() {
+        error!("Could not find dlc_load.json");
+        tokio::fs::write(&dlcload, "{}").await.unwrap();
+    }
+
+    let cachedir = app.path_resolver().app_cache_dir().unwrap();
+    let target_dir = cachedir.join("tmp_modpaks").join(modpack.uuid.to_string());
+
+    let statemods = state.mods.lock().await;
+
+    let mods = modpack
+        .mods
+        .iter()
+        .map(|x| statemods.get(x).unwrap().clone())
+        .collect::<Vec<_>>();
+
+    let mut tmpmods: Vec<String> = Vec::new();
+
+    for mod_ in mods.iter() {
+        let gamedata = mod_.to_serialized_game_descriptor();
+        let path = target_dir.join(format!("ugc_{}.mod", mod_.uuid.unwrap()));
+        if !path.exists() {
+            std::fs::create_dir_all(&target_dir).unwrap();
+        }
+
+        info!("Writing mod {} to {}", mod_.name, path.display());
+
+        tokio::fs::write(&path, gamedata).await.unwrap();
+
+        tmpmods.push(path.display().to_string().replace("\\", "/"));
+    }
+
+    let output = json!({
+        "enabled_mods": tmpmods,
+        "disabled_dlcs": []
+    });
+
+    tokio::fs::write(&dlcload, serde_json::to_string(&output).unwrap())
+        .await
+        .unwrap();
+
+    Ok(())
+}
+
 #[tauri::command]
-pub async fn start_game(options: Vec<String>) -> Result<(), String> {
+pub async fn start_game(
+    app: tauri::AppHandle,
+    options: Vec<String>,
+    modpack: Option<Uuid>,
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+) -> Result<(), String> {
     let mut s = System::new_all();
     s.refresh_all();
 
@@ -276,12 +344,22 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
     };
 
     match steam_dir.app(&394360) {
-        Some(app) => filesystem::start_game(&app.path, options).await,
+        Some(steamapp) => {
+            if let Some(modpack) = modpack {
+                apply_modpack(app, state, modpack).await?;
+            }
+            filesystem::start_game(&steamapp.path, options).await
+        }
         None => {
             let Ok(folder) = filesystem::get_hoi_folder().await else {
                 error!("Could not find hoi directory");
                 return Err("Could not find hoi directory".to_string());
             };
+
+            if let Some(modpack) = modpack {
+                apply_modpack(app, state, modpack).await?;
+            }
+
             filesystem::start_game(&folder, options).await
         }
     }
@@ -291,11 +369,7 @@ pub async fn start_game(options: Vec<String>) -> Result<(), String> {
 pub async fn get_launcher_info(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<LauncherInfo, String> {
-    state
-        .info
-        .lock()
-        .map(|x| x.clone())
-        .map_err(|_| "Could not get launcher info".to_string())
+    Ok(state.info.lock().await.clone())
 }
 
 #[tauri::command]
@@ -305,7 +379,7 @@ pub async fn get_mods(
     Ok(state
         .mods
         .lock()
-        .unwrap()
+        .await
         .values()
         .map(|x| x.clone())
         .collect::<Vec<_>>())
@@ -314,10 +388,62 @@ pub async fn get_mods(
 #[tauri::command]
 pub async fn get_modpacks(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
-) -> Result<Vec<Modpack>, String> {
-    state
+) -> Result<Vec<Uuid>, String> {
+    Ok(state
         .modpacks
         .lock()
-        .map(|x| x.clone())
-        .map_err(|_| "Could not get modpacks".to_string())
+        .await
+        .keys()
+        .cloned()
+        .collect::<Vec<_>>())
+}
+
+#[tauri::command]
+pub async fn create_modpack(
+    app: tauri::AppHandle,
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+    name: String,
+    mods: Vec<Uuid>,
+) -> Result<Uuid, String> {
+    for mod_ in &mods {
+        if !state.mods.lock().await.contains_key(mod_) {
+            warn!("Mod {} not found", mod_);
+            return Err(format!("Mod not found {}", mod_));
+        }
+    }
+
+    let uuid = Uuid::new_v4();
+    let modpack = Modpack { name, mods, uuid };
+
+    let mut modpacks = state.modpacks.lock().await;
+    modpacks.insert(uuid, modpack.clone());
+
+    let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app).await else {
+        error!("Could not get modpacks folder");
+        return Err("Could not get modpacks folder".to_string());
+    };
+
+    let modpacks_dir = launcher_mods_dir.join("modpacks");
+    if !modpacks_dir.exists() {
+        std::fs::create_dir_all(&modpacks_dir).unwrap();
+    }
+
+    let path = modpacks_dir.join(format!("{}.mod", uuid));
+    tokio::fs::write(&path, serde_json::to_string(&modpack).unwrap()).await.unwrap();
+
+    Ok(uuid)
+}
+
+#[tauri::command]
+pub async fn get_modpack(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+    uuid: Uuid,
+) -> Result<Modpack, String> {
+    let modpacks = state.modpacks.lock().await;
+
+    let Some(modpack) = modpacks.get(&uuid).clone() else {
+        error!("Modpack not found");
+        return Err("Modpack not found".to_string());
+    };
+    Ok(modpack.clone())
 }

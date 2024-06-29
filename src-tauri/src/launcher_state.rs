@@ -47,8 +47,8 @@ pub struct AlternativeExecutable {
 }
 #[derive(Default)]
 pub struct LauncherState {
-    pub mods: std::sync::Mutex<HashMap<Uuid, crate::models::descriptor::Descriptor>>,
-    pub modpacks: std::sync::Mutex<Vec<crate::models::modpack::Modpack>>,
-    pub info: std::sync::Mutex<LauncherInfo>,
-    pub settings: std::sync::Mutex<crate::settings::Settings>,
+    pub mods: tokio::sync::Mutex<HashMap<Uuid, crate::models::descriptor::Descriptor>>,
+    pub modpacks: tokio::sync::Mutex<HashMap<Uuid, crate::models::modpack::Modpack>>,
+    pub info: tokio::sync::Mutex<LauncherInfo>,
+    pub settings: tokio::sync::Mutex<crate::settings::Settings>,
 }

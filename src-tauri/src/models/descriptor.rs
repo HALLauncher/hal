@@ -21,8 +21,6 @@ impl PartialEq for Descriptor {
 
 pub struct ShareableDescriptor {
     pub name: String,
-    pub version: String,
-    pub supported_version: String,
     pub remote_file_id: String,
 }
 
@@ -36,6 +34,17 @@ impl HashTarget for Descriptor {
     }
 }
 
+
+
+impl Descriptor {
+    pub fn to_serialized_game_descriptor(&self) -> String {
+        let mut buffer: Vec<u8> = Vec::new();
+        let mut writer = jomini::TextWriterBuilder::new().from_writer(&mut buffer);
+        writer.write_unquoted(b"path").unwrap();
+        writer.write_quoted(self.path.clone().unwrap().as_bytes()).unwrap();
+        String::from_utf8(buffer).unwrap()
+    }
+}
 pub trait IsRemote {
     fn is_remote(&self) -> bool;
 }
@@ -50,9 +59,7 @@ impl ToShareable<ShareableDescriptor> for Descriptor {
     fn to_shareable(&self) -> ShareableDescriptor {
         ShareableDescriptor {
             name: self.name.clone(),
-            version: self.version.clone().unwrap_or("".to_string()),
-            supported_version: self.supported_version.clone().unwrap_or("".to_string()),
-            remote_file_id: self.remote_file_id.clone().unwrap_or("".to_string()),
+            remote_file_id: self.remote_file_id.clone().unwrap(),
         }
     }
 }

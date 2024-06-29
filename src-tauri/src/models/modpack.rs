@@ -1,17 +1,16 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use super::{
-    descriptor::{Descriptor, ShareableDescriptor},
-    FromFile, ToShareable,
+    descriptor::ShareableDescriptor,
+    FromFile,
 };
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Clone)]
 pub struct Modpack {
     pub name: String,
-    pub mods: HashMap<Uuid, Descriptor>,
+    pub mods: Vec<Uuid>,
+    pub uuid: Uuid,
 }
 
 pub struct ShareableModpack {
@@ -24,14 +23,5 @@ impl FromFile<Modpack> for Modpack {
         let content = std::fs::read_to_string(path).map_err(|_| "Could not read file")?;
         let modpack = serde_json::from_str(&content).map_err(|_| "Could not parse file")?;
         Ok(modpack)
-    }
-}
-
-impl ToShareable<ShareableModpack> for Modpack {
-    fn to_shareable(&self) -> ShareableModpack {
-        ShareableModpack {
-            name: self.name.clone(),
-            mods: self.mods.values().map(|x| x.to_shareable()).collect(),
-        }
     }
 }

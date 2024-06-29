@@ -31,11 +31,11 @@ impl Settings {
 pub async fn get_settings(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<Settings, String> {
-    state
+    Ok(state
         .settings
         .lock()
-        .map(|x| x.clone())
-        .map_err(|_| "Could not get settings".to_string())
+        .await
+        .clone())
 }
 
 #[tauri::command]
@@ -43,11 +43,9 @@ pub async fn save_settings(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
     settings: Settings,
 ) -> Result<(), String> {
-    state
+    *state
         .settings
         .lock()
-        .map(|mut x| {
-            *x = settings;
-        })
-        .map_err(|_| "Could not save settings".to_string())
+        .await = settings;
+    Ok(())
 }

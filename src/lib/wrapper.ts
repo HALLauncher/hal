@@ -6,9 +6,12 @@ import { writable } from "svelte/store";
 
 export const cached_mod_images = writable<{id: string; url: string}[]>([]);
 
+export type Uuid = string;
+
 export type ModPack = { 
 	name: string;
 	mods: string[];
+	uuid: Uuid;
 };
 
 export type Settings = {
@@ -56,6 +59,7 @@ export type ModDescriptor = {
   version?: string;
   supported_version?: string;
   remote_file_id?: string;
+  uuid: Uuid;
 };
 
 export type RawModDescriptor = {
@@ -68,7 +72,7 @@ export type RawModDescriptor = {
 	remote_file_id?: string;
 };
 
-export const start_game = async (options: string[]): Promise<void> => invoke("start_game", { options }); // WTF
+export const start_game = async (options: string[], modpack?: Uuid): Promise<void> => invoke("start_game", { options, modpack }); // WTF
 export const sync_with_paradox = async () => invoke("sync_with_paradox");
 export const update_mods = async () => invoke("update_mods");
 export const update_modpacks = async () => invoke("update_modpacks");
@@ -76,6 +80,13 @@ export const get_launcher_info = async (): Promise<LauncherInfo> => invoke("get_
 export const get_mods = async (): Promise<ModDescriptor[]> => invoke("get_mods");
 export const get_settings = async (): Promise<Settings> => invoke("get_settings");
 export const save_settings = async (settings: Settings): Promise<void> => invoke("save_settings", { settings });
+/*
+            commands::create_modpack,
+            commands::get_modpack
+*/
+export const get_modpacks = async (): Promise<Uuid[]> => invoke("get_modpacks");
+export const get_modpack = async (uuid: string): Promise<ModPack> => invoke("get_modpack", { uuid });
+export const create_modpack = async (name: string, mods: Uuid[]): Promise<Uuid> => invoke("create_modpack", { name, mods });
 
 const find_file_with_extension = async (path: string, regexp: RegExp): Promise<string | null> => {
 	const files = await fs.readDir(path);

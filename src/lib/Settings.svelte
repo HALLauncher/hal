@@ -3,7 +3,7 @@
 	import Checkbox from "./Checkbox.svelte";
 	import Textarea from "./Textarea.svelte";
   	import Button from "./Button.svelte";
-  	import { get_mods, type ModDescriptor } from "./wrapper";
+  	import { create_modpack, get_modpack, get_modpacks, get_mods, start_game, type ModDescriptor, type ModPack } from "./wrapper";
   	import ModItem from "./ModItem.svelte";
   import { emit, listen } from "@tauri-apps/api/event";
 
@@ -20,15 +20,11 @@
 	let mods: ModDescriptor[] = [];
 	let filter = "";
 
-	let modPromise = window.__TAURI__ ? get_mods() : Array(10).fill({ name: "Placeholder", remote_file_id: "dQw4w9WgXcQ" } as ModDescriptor)
-
-
-
-	// const test = async () => {
-	// 	await emit("need-wokrshop-item", 3255417215);
-
-
-	// };
+	let modPromise: ModDescriptor[] | Promise<ModDescriptor[]> = window.__TAURI__ ? get_mods() : Array(10).fill({ name: "Placeholder", remote_file_id: "dQw4w9WgXcQ" } as ModDescriptor)
+	let modPackPromise: ModPack[] | Promise<ModPack[]> = window.__TAURI__ ? get_modpacks().then(async x => {
+		const promises = x.map(x => get_modpack(x));
+		return Promise.all(promises);
+	}) : Array(10).fill({ name: "Placeholder", mods: ["dQw4w9WgXcQ"] } as ModPack);
 
 	let debug = checkArgs.includes("-debug");
 	$: {
@@ -62,9 +58,25 @@
 					{#each mods.filter(x => x.name.toLowerCase().includes(filter.toLowerCase())) as mod, i}
 						<ModItem {mod} />
 					{/each}
+					<Button content="Add all mods to modpack" on:click={() => {
+						create_modpack("test", mods.map(x => x.uuid)).then((uuid) => {
+							console.log(uuid);
+						});
+
+					}} />
 				{/await}
 			{:else if page === SettingsPage.Modpack}
-				<p>Modpacks</p>
+				{#await modPackPromise}
+					<p>Loading...</p>
+				{:then modpacks}
+					<Textarea bind:text={filter} />
+					{#each modpacks.filter(x => x.name.toLowerCase().includes(filter.toLowerCase())) as modpack, i}
+						<!-- <p on:click={() => {
+							start_game([], modpack.uuid).catch(e => console.error(e));
+						}}>{modpack.name}</p> -->
+						<button on:click={() => start_game(["-debug"], modpack.uuid)}>Start game</button>
+					{/each}
+				{/await}
 			{/if}
 		</div>
 	</div>

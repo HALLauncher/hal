@@ -11,6 +11,10 @@ export type ModPack = {
 	mods: string[];
 };
 
+export type Settings = {
+	custom_background?: string;	
+};
+
 export type LauncherInfo = {
 	gameId: string;
 	displayName: string;

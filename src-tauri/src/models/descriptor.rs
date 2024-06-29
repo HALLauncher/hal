@@ -9,7 +9,6 @@ pub struct Descriptor {
     pub supported_version: Option<String>,
     pub remote_file_id: Option<String>,
 }
-
 pub struct ShareableDescriptor {
     pub name: String,
     pub version: String,

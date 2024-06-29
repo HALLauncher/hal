@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 pub trait FromFile<T> {
     fn from_file(path: &std::path::PathBuf) -> Result<T, String>;
 }

@@ -271,16 +271,15 @@ pub async fn apply_modpack(
         return Err("Could not find documents directory".to_string());
     };
 
-    let datafoler = docs.join("Paradox Interactive").join("Hearts of Iron IV");
+    let datafolder = docs.join("Paradox Interactive").join("Hearts of Iron IV");
 
-    let dlcload = datafoler.join("dlc_load.json");
+    let dlcload = datafolder.join("dlc_load.json");
     if !dlcload.exists() || !dlcload.is_file() {
         error!("Could not find dlc_load.json");
         tokio::fs::write(&dlcload, "{}").await.unwrap();
     }
 
-    let cachedir = app.path_resolver().app_cache_dir().unwrap();
-    let target_dir = cachedir.join("tmp_modpaks").join(modpack.uuid.to_string());
+    let target_dir = datafolder.join("mod");
 
     let statemods = state.mods.lock().await;
 
@@ -294,7 +293,25 @@ pub async fn apply_modpack(
 
     for mod_ in mods.iter() {
         let gamedata = mod_.to_serialized_game_descriptor();
-        let path = target_dir.join(format!("ugc_{}.mod", mod_.uuid.unwrap()));
+        /*
+            For long time i`m trying to figure out how to do this.
+            My first attempt was to just create file somewhere and write path to it to dlc_load.json, but it didn't work.
+            My second attempt was to create file in datafolder that located in hoi launcher directory and write path to it to dlc_load.json.
+            And it also didn't work.
+
+            After some time i found out that any mod file should be in /mod directory, and should have SPECIAL NAMING
+            YEP SPECIAL NAMING. GAME DOESN'T RECOGNIZE ANY NAMES EXCLUDING SPECIAL NAMING.
+
+            after reversing original launcher i found this:
+            "DESCRIPTOR_FILENAME", {
+                [Gr.STEAM]: b => "ugc_" + b.steamId,
+                [Gr.PDX]: b => "pdx_" + b.pdxId,
+                [Gr.LOCAL]: b => B.a.basename(b.dirPath)
+            })
+
+            if anyone wants to implement some usless staff like me, please do not repeat my mistakes and just use it.
+        */
+        let path = target_dir.join(format!("ugc_{}.mod", mod_.remote_file_id.clone().unwrap()));
         if !path.exists() {
             std::fs::create_dir_all(&target_dir).unwrap();
         }
@@ -302,6 +319,10 @@ pub async fn apply_modpack(
         info!("Writing mod {} to {}", mod_.name, path.display());
 
         tokio::fs::write(&path, gamedata).await.unwrap();
+        let path = pathdiff::diff_paths(&path, &datafolder).unwrap();
+        if !path.is_relative() {
+            return Err("Could not get relative path".to_string());
+        }
 
         tmpmods.push(path.display().to_string().replace("\\", "/"));
     }

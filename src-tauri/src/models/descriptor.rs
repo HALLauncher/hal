@@ -1,3 +1,6 @@
+use std::path::PathBuf;
+
+use tauri::http::version;
 use uuid::Uuid;
 
 use super::{HashTarget, ToShareable};
@@ -34,14 +37,26 @@ impl HashTarget for Descriptor {
     }
 }
 
-
-
 impl Descriptor {
     pub fn to_serialized_game_descriptor(&self) -> String {
         let mut buffer: Vec<u8> = Vec::new();
         let mut writer = jomini::TextWriterBuilder::new().from_writer(&mut buffer);
+        if let Some(version) = &self.version {
+            writer.write_unquoted(b"version").unwrap();
+            writer
+                .write_quoted(version.clone().as_bytes())
+                .unwrap();
+        }
+        writer.write_unquoted(b"name").unwrap();
+        writer.write_quoted(self.name.clone().as_bytes()).unwrap();
+        writer.write_unquoted(b"supported_version").unwrap();
+        writer
+            .write_quoted(self.supported_version.clone().unwrap().as_bytes())
+            .unwrap();
         writer.write_unquoted(b"path").unwrap();
-        writer.write_quoted(self.path.clone().unwrap().as_bytes()).unwrap();
+        writer
+            .write_quoted(self.path.clone().unwrap().as_bytes())
+            .unwrap();
         String::from_utf8(buffer).unwrap()
     }
 }

@@ -1681,6 +1681,7 @@ dependencies = [
  "dirs-next",
  "jomini",
  "log",
+ "pathdiff",
  "regex",
  "serde",
  "serde_json",

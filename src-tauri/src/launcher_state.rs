@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use uuid::Uuid;
+
 #[derive(Debug, serde::Deserialize, serde::Serialize, Clone, Default)]
 pub struct LauncherInfo {
     #[serde(rename = "gameId")]
@@ -45,7 +47,7 @@ pub struct AlternativeExecutable {
 }
 #[derive(Default)]
 pub struct LauncherState {
-    pub mods: std::sync::Mutex<Vec<crate::models::descriptor::Descriptor>>,
+    pub mods: std::sync::Mutex<HashMap<Uuid, crate::models::descriptor::Descriptor>>,
     pub modpacks: std::sync::Mutex<Vec<crate::models::modpack::Modpack>>,
     pub info: std::sync::Mutex<LauncherInfo>,
     pub settings: std::sync::Mutex<crate::settings::Settings>,

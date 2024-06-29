@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-use super::FromFile;
+use super::{FromFile, HashTarget};
 
 #[derive(Debug, Clone, Serialize, jomini::JominiDeserialize)]
 pub struct HoiDescriptor {
@@ -20,6 +20,20 @@ pub enum DescriptorType {
 
 trait DescriptorTyping {
     fn get_type(&self) -> DescriptorType;
+}
+
+impl HashTarget for HoiDescriptor {
+    fn hash_target(&self) -> String {
+        self.remote_file_id
+            .clone()
+            .or(self.name.clone())
+            .or(self.path.clone())
+            .or(self.archive.clone())
+            .unwrap_or(format!(
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ btw this is not valid descriptor {}",
+                std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
+            ))
+    }
 }
 
 impl DescriptorTyping for HoiDescriptor {

@@ -1,6 +1,8 @@
-use super::ToShareable;
+use uuid::Uuid;
 
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default, PartialEq, Eq)]
+use super::{HashTarget, ToShareable};
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
 pub struct Descriptor {
     pub path: Option<String>,
     pub archive: Option<String>,
@@ -8,12 +10,30 @@ pub struct Descriptor {
     pub version: Option<String>,
     pub supported_version: Option<String>,
     pub remote_file_id: Option<String>,
+    pub uuid: Option<Uuid>,
 }
+
+impl PartialEq for Descriptor {
+    fn eq(&self, other: &Self) -> bool {
+        self.uuid == other.uuid
+    }
+}
+
 pub struct ShareableDescriptor {
     pub name: String,
     pub version: String,
     pub supported_version: String,
     pub remote_file_id: String,
+}
+
+impl HashTarget for Descriptor {
+    fn hash_target(&self) -> String {
+        self.remote_file_id
+            .clone()
+            .or(self.path.clone())
+            .or(self.archive.clone())
+            .unwrap_or(self.name.clone())
+    }
 }
 
 pub trait IsRemote {

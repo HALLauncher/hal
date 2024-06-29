@@ -1,14 +1,17 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use super::{
     descriptor::{Descriptor, ShareableDescriptor},
     FromFile, ToShareable,
 };
 
-#[derive(Debug, Deserialize, Serialize, PartialEq, Eq, Clone)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, Clone)]
 pub struct Modpack {
     pub name: String,
-    pub mods: Vec<Descriptor>,
+    pub mods: HashMap<Uuid, Descriptor>,
 }
 
 pub struct ShareableModpack {
@@ -28,7 +31,7 @@ impl ToShareable<ShareableModpack> for Modpack {
     fn to_shareable(&self) -> ShareableModpack {
         ShareableModpack {
             name: self.name.clone(),
-            mods: self.mods.iter().map(|x| x.to_shareable()).collect(),
+            mods: self.mods.values().map(|x| x.to_shareable()).collect(),
         }
     }
 }

@@ -2,20 +2,23 @@ use std::path::PathBuf;
 
 use crate::{
     launcher_state::LauncherInfo,
-    models::{descriptor, hoidescriptor, modpack::Modpack, FromFile},
+    models::{descriptor, hoidescriptor, modpack::Modpack, FromFile, HashTarget},
 };
 
 use tauri_plugin_hal_steamworks::filesystem;
 
 use sysinfo::System;
+use uuid::Uuid;
 
 #[tauri::command]
 pub fn get_mod(
-    modname: &str,
+    hash: String,
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<crate::models::descriptor::Descriptor, String> {
+    let uuid = Uuid::parse_str(&hash).unwrap();
+
     let mods = state.mods.lock().unwrap();
-    match mods.iter().find(|x| x.name == modname) {
+    match mods.get(&uuid) {
         Some(mod_) => Ok(mod_.clone()),
         None => Err("Mod not found".to_string()),
     }
@@ -31,6 +34,8 @@ pub async fn sync_with_paradox(
     app: tauri::AppHandle,
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<(), String> {
+    let _ = update_mods(state.clone(), app.clone()).await;
+
     let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app).await else {
         error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
@@ -85,21 +90,23 @@ pub async fn sync_with_paradox(
                 }
             }
 
-            let m = descriptor::Descriptor {
+            let mut m = descriptor::Descriptor {
                 archive: mod_.archive,
                 path: mod_.path,
                 name: mod_.name.unwrap(),
                 version: mod_.version,
                 supported_version: mod_.supported_version,
                 remote_file_id: mod_.remote_file_id,
+                uuid: None,
             };
 
-            let file_id = &m.remote_file_id;
-            let name = &m.name;
+            m.uuid = Some(Uuid::new_v3(&Uuid::NAMESPACE_OID, m.hash_target().as_bytes()));
 
-            let filename = file_id.as_ref().unwrap_or(name);
+            if state.mods.lock().unwrap().contains_key(&m.uuid.unwrap()) {
+                continue;
+            }
 
-            let path = launcher_mods_dir.join(format!("{}{}", filename, ".mod"));
+            let path = launcher_mods_dir.join(format!("{}{}", m.uuid.unwrap(), ".mod"));
             tokio::fs::write(&path, serde_json::to_string(&m).unwrap())
                 .await
                 .map_err(|_| {
@@ -195,9 +202,7 @@ pub async fn update_mods(
         }
 
         if let Ok(mods) = state.mods.lock().as_mut() {
-            if !mods.contains(&m) {
-                mods.push(m);
-            }
+            mods.insert(m.uuid.unwrap(), m);
         }
     }
 
@@ -297,11 +302,13 @@ pub async fn get_launcher_info(
 pub async fn get_mods(
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
 ) -> Result<Vec<descriptor::Descriptor>, String> {
-    state
+    Ok(state
         .mods
         .lock()
+        .unwrap()
+        .values()
         .map(|x| x.clone())
-        .map_err(|_| "Could not get mods".to_string())
+        .collect::<Vec<_>>())
 }
 
 #[tauri::command]

@@ -15,6 +15,24 @@
     open(mod?.path!);
   };
 
+  const openInSteamWorkshop = (event: MouseEvent, id: string) => {
+	//window.open();
+	let url = `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`;
+	if (event.shiftKey) {
+		url = `steam://openurl/${url}`;
+	}
+
+	open(url);
+  };
+
+  const actionButtonClick = (event: MouseEvent) => {
+	if (mod?.remote_file_id) {
+	  openInSteamWorkshop(event, mod.remote_file_id);
+	} else if (mod?.path) {
+	  openFolder();
+	}
+  };
+
   let icon: string | null = null;
   let steam_thumbnail: string | null = null;
 
@@ -64,7 +82,13 @@
 			<img class="icon" src={icon ?? "/images/Ого.svg"} alt="" />
 			<div class="info">
 				<span class="mod-status">
-					{mod.remote_file_id ? "steam" : "local"}
+					{#if mod.remote_file_id}
+						<i class="hal-steam"></i>
+						steam
+					{:else}
+						<!-- <i class="hal-local"></i> -->
+						local
+					{/if}
 				</span>
 				<h3>{mod.name}</h3>
 				{#if mod.remote_file_id}
@@ -82,7 +106,8 @@
 					--font-size="16px"
 					--btn-color="rgba(31, 31, 31, 0.44)"
 					--hover-color="rgba(160, 160, 160, 0.2)"
-					icon="hal-upload"
+					icon={mod.remote_file_id ? "hal-steam" : "hal-upload"}
+					on:click={actionButtonClick}
 					>
 				</Button>
 				<Button
@@ -110,7 +135,9 @@
 		justify-content: center;
 		width: max-content;
 
-		padding: 0px 5px;
+		gap: 4px;
+
+		padding: 1px 5px;
 	}
 
 	.moditem {

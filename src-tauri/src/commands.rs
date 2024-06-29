@@ -63,10 +63,27 @@ pub async fn sync_with_paradox(
         if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&path) {
             info!("Found mod: {:#?}", mod_);
 
-            if mod_.name.is_none() {
+            if mod_.name.is_none() 
+                || (mod_.archive.is_none() && mod_.path.is_none()) {
                 warn!("Could not get name from mod {}", path.display());
                 let _ = tokio::fs::remove_file(&path).await;
                 continue;
+            }
+
+            if let Some(modpath) = &mod_.path {
+                if !tokio::fs::try_exists(&modpath).await.unwrap_or(false) {
+                    warn!("Mod descriptor has invalid path {}", modpath);
+                    let _ = tokio::fs::remove_file(&path).await;
+                    continue;
+                }
+            }
+
+            if let Some(archive) = &mod_.archive {
+                if !tokio::fs::try_exists(&archive).await.unwrap_or(false) {
+                    warn!("Mod descriptor has invalid archive {}", archive);
+                    let _ = tokio::fs::remove_file(&path).await;
+                    continue;
+                }
             }
 
             let m = descriptor::Descriptor {

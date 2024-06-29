@@ -2,11 +2,7 @@ use std::path::PathBuf;
 
 use crate::{
     launcher_state::LauncherInfo,
-    models::{
-        descriptor, hoidescriptor,
-        modpack::Modpack,
-        FromFile, HashTarget,
-    },
+    models::{descriptor, hoidescriptor, modpack::Modpack, FromFile, HashTarget},
 };
 
 use serde_json::json;
@@ -41,68 +37,54 @@ pub async fn sync_with_paradox(
 ) -> Result<(), String> {
     let _ = update_mods(state.clone(), app.clone()).await;
 
-    let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app).await else {
+    let Ok(launcher_mods_dir) = filesystem::get_mods_folder(app.clone()).await else {
         error!("Could not get mods folder");
         return Err("Could not get mods folder".to_string());
     };
 
-    let Some(docs) = dirs_next::document_dir() else {
-        error!("Could not find documents directory");
-        return Err("Could not find documents directory".to_string());
-    };
+    let installed_workshop_items =
+        tauri_plugin_hal_steamworks::workshop::get_subscribed_workshop_items(app.clone()).await;
 
-    let mod_foler = docs
-        .join("Paradox Interactive")
-        .join("Hearts of Iron IV")
-        .join("mod");
-    if !mod_foler.exists() || !mod_foler.is_dir() {
-        error!("Could not find mod directory");
-        return Err("Could not find mod directory".to_string());
-    };
+    for item in installed_workshop_items {
+        let path = item.path;
 
-    let files = mod_foler.read_dir().unwrap();
-
-    for file in files {
-        let file = file.unwrap();
-        let path = file.path();
-
-        if !path.is_file() || !path.extension().unwrap().to_str().unwrap().eq("mod") {
+        if !path.exists() {
+            warn!(
+                "Item {} was received but his path {:#?} not exists",
+                item.id,
+                path.display()
+            );
             continue;
-        };
+        }
+        // TODO: add support for archives
+        let descriptor = path
+            .read_dir()
+            .unwrap()
+            .filter(|x| x.is_ok())
+            .map(|x| x.unwrap())
+            .filter(|x| x.path().is_file())
+            .map(|x| x.path())
+            .filter(|x| x.extension().is_some())
+            .filter(|x| x.extension().unwrap().to_str().unwrap().eq("mod"))
+            .next();
 
-        if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&path) {
+        if descriptor.is_none() {
+            warn!("Item {} was received but no descriptor was found in {:#?}", item.id, path.display());
+            continue;
+        }
+
+        let descriptor = descriptor.unwrap();
+
+        if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&descriptor) {
             info!("Found mod: {:?}", mod_);
 
-            if mod_.name.is_none() || (mod_.archive.is_none() && mod_.path.is_none()) {
-                warn!("Could not get name from mod {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", path.display());
-                let _ = tokio::fs::remove_file(&path).await;
-                continue;
-            }
-
-            if let Some(modpath) = &mod_.path {
-                if !tokio::fs::try_exists(&modpath).await.unwrap_or(false) {
-                    warn!("Mod descriptor has invalid path {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", modpath);
-                    let _ = tokio::fs::remove_file(&path).await;
-                    continue;
-                }
-            }
-
-            if let Some(archive) = &mod_.archive {
-                if !tokio::fs::try_exists(&archive).await.unwrap_or(false) {
-                    warn!("Mod descriptor has invalid archive {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", archive);
-                    let _ = tokio::fs::remove_file(&path).await;
-                    continue;
-                }
-            }
-
             let mut m = descriptor::Descriptor {
-                archive: mod_.archive,
-                path: mod_.path,
                 name: mod_.name.unwrap(),
+                path: Some(path.display().to_string()),
                 version: mod_.version,
                 supported_version: mod_.supported_version,
                 remote_file_id: mod_.remote_file_id,
-                uuid: None,
+                ..Default::default()
             };
 
             m.uuid = Some(Uuid::new_v3(
@@ -115,6 +97,7 @@ pub async fn sync_with_paradox(
             }
 
             let path = launcher_mods_dir.join(format!("{}{}", m.uuid.unwrap(), ".mod"));
+
             tokio::fs::write(&path, serde_json::to_string(&m).unwrap())
                 .await
                 .map_err(|_| {
@@ -395,7 +378,8 @@ pub async fn get_mods(
         .mods
         .lock()
         .await
-        .values().cloned()
+        .values()
+        .cloned()
         .collect::<Vec<_>>())
 }
 
@@ -443,7 +427,9 @@ pub async fn create_modpack(
     }
 
     let path = modpacks_dir.join(format!("{}.mod", uuid));
-    tokio::fs::write(&path, serde_json::to_string(&modpack).unwrap()).await.unwrap();
+    tokio::fs::write(&path, serde_json::to_string(&modpack).unwrap())
+        .await
+        .unwrap();
 
     Ok(uuid)
 }

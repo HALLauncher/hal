@@ -50,7 +50,6 @@
 		flex-direction: column;
 		gap: 5px;
 
-		height: 100%;
 		background: #3a3a3ae0;
 		border-radius: 5px;
 		padding: 5px 8px;

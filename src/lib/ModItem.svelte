@@ -91,6 +91,7 @@
 					--btn-color="rgba(31, 31, 31, 0.44)"
 					--hover-color="rgba(160, 160, 160, 0.2)"
 					icon="hal-open"
+					on:click={openFolder}
 					>
 				</Button>
 			</div>

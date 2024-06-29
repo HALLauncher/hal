@@ -65,6 +65,7 @@ pub async fn sync_with_paradox(
 
             if mod_.name.is_none() {
                 warn!("Could not get name from mod {}", path.display());
+                let _ = tokio::fs::remove_file(&path).await;
                 continue;
             }
 
@@ -182,8 +183,6 @@ pub async fn update_mods(
             }
         }
     }
-
-
 
     Ok(())
 }

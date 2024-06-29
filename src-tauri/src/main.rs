@@ -45,7 +45,7 @@ fn main() {
             commands::get_mods,
             commands::get_modpacks,
             settings::get_settings,
-            settings::save_settings
+            settings::save_settings,
         ])
         .setup(|app| {
             let state = app.state::<launcher_state::LauncherState>();

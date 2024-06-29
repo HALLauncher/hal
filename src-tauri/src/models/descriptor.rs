@@ -31,14 +31,8 @@ impl ToShareable<ShareableDescriptor> for Descriptor {
         ShareableDescriptor {
             name: self.name.clone(),
             version: self.version.clone().unwrap_or("".to_string()),
-            supported_version: self
-                .supported_version
-                .clone()
-                .unwrap_or("".to_string()),
-            remote_file_id: self
-                .remote_file_id
-                .clone()
-                .unwrap_or("".to_string()),
+            supported_version: self.supported_version.clone().unwrap_or("".to_string()),
+            remote_file_id: self.remote_file_id.clone().unwrap_or("".to_string()),
         }
     }
 }

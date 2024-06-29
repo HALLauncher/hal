@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
 pub struct Settings {
     pub custom_background: Option<PathBuf>,
@@ -29,22 +28,26 @@ impl Settings {
 }
 
 #[tauri::command]
-pub async fn get_settings(state: tauri::State<'_, crate::launcher_state::LauncherState>) -> Result<Settings, String> {
+pub async fn get_settings(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+) -> Result<Settings, String> {
     state
         .settings
         .lock()
-        .and_then(|x| Ok(x.clone()))
+        .map(|x| x.clone())
         .map_err(|_| "Could not get settings".to_string())
 }
 
 #[tauri::command]
-pub async fn save_settings(state: tauri::State<'_, crate::launcher_state::LauncherState>, settings: Settings) -> Result<(), String> {
+pub async fn save_settings(
+    state: tauri::State<'_, crate::launcher_state::LauncherState>,
+    settings: Settings,
+) -> Result<(), String> {
     state
         .settings
         .lock()
-        .and_then(|mut x| {
+        .map(|mut x| {
             *x = settings;
-            Ok(())
         })
         .map_err(|_| "Could not save settings".to_string())
 }

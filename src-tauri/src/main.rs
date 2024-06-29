@@ -51,13 +51,7 @@ fn main() {
             let state = app.state::<launcher_state::LauncherState>();
             let handle = app.app_handle();
             tauri::async_runtime::block_on(async move {
-                state
-                    .settings
-                    .lock()
-                    .unwrap()
-                    .load(handle)
-                    .await
-                    .unwrap();  
+                state.settings.lock().unwrap().load(handle).await.unwrap();
             });
             Ok(())
         })

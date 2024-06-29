@@ -16,8 +16,8 @@ pub fn get_mod(
 ) -> Result<crate::models::descriptor::Descriptor, String> {
     let mods = state.mods.lock().unwrap();
     match mods.iter().find(|x| x.name == modname) {
-        Some(mod_) => return Ok(mod_.clone()),
-        None => return Err("Mod not found".to_string()),
+        Some(mod_) => Ok(mod_.clone()),
+        None => Err("Mod not found".to_string()),
     }
 }
 
@@ -50,9 +50,9 @@ pub async fn sync_with_paradox(
         return Err("Could not find mod directory".to_string());
     };
 
-    let mut files = mod_foler.read_dir().unwrap();
+    let files = mod_foler.read_dir().unwrap();
 
-    while let Some(file) = files.next() {
+    for file in files {
         let file = file.unwrap();
         let path = file.path();
 
@@ -63,8 +63,7 @@ pub async fn sync_with_paradox(
         if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&path) {
             info!("Found mod: {:?}", mod_);
 
-            if mod_.name.is_none() 
-                || (mod_.archive.is_none() && mod_.path.is_none()) {
+            if mod_.name.is_none() || (mod_.archive.is_none() && mod_.path.is_none()) {
                 warn!("Could not get name from mod {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", path.display());
                 let _ = tokio::fs::remove_file(&path).await;
                 continue;
@@ -144,9 +143,8 @@ pub async fn sync_with_paradox(
     state
         .info
         .lock()
-        .and_then(|mut x| {
+        .map(|mut x| {
             *x = launcher_settings.clone();
-            Ok(())
         })
         .map_err(|_| "Could not write launcher-settings.json".to_string())
 }
@@ -161,9 +159,9 @@ pub async fn update_mods(
         return Err("Could not get mods folder".to_string());
     };
 
-    let mut files = launcher_mods_dir.read_dir().unwrap();
+    let files = launcher_mods_dir.read_dir().unwrap();
 
-    while let Some(file) = files.next() {
+    for file in files {
         let Ok(file) = file else {
             continue;
         };
@@ -185,7 +183,9 @@ pub async fn update_mods(
         };
 
         let tmp_m = m.clone();
-        let path = tmp_m.path.unwrap_or(tmp_m.archive.unwrap_or("".to_string()));
+        let path = tmp_m
+            .path
+            .unwrap_or(tmp_m.archive.unwrap_or("".to_string()));
 
         if tokio::fs::try_exists(path).await.is_err() {
             if tokio::fs::remove_file(file.path()).await.is_err() {
@@ -219,8 +219,8 @@ pub async fn update_modpacks(
         std::fs::create_dir_all(&modpacks_dir).unwrap();
     }
 
-    let mut files = modpacks_dir.read_dir().unwrap();
-    while let Some(file) = files.next() {
+    let files = modpacks_dir.read_dir().unwrap();
+    for file in files {
         let Ok(file) = file else {
             continue;
         };
@@ -289,7 +289,7 @@ pub async fn get_launcher_info(
     state
         .info
         .lock()
-        .and_then(|x| Ok(x.clone()))
+        .map(|x| x.clone())
         .map_err(|_| "Could not get launcher info".to_string())
 }
 
@@ -300,7 +300,7 @@ pub async fn get_mods(
     state
         .mods
         .lock()
-        .and_then(|x| Ok(x.clone()))
+        .map(|x| x.clone())
         .map_err(|_| "Could not get mods".to_string())
 }
 
@@ -311,6 +311,6 @@ pub async fn get_modpacks(
     state
         .modpacks
         .lock()
-        .and_then(|x| Ok(x.clone()))
+        .map(|x| x.clone())
         .map_err(|_| "Could not get modpacks".to_string())
 }

@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use super::{descriptor::{Descriptor, ShareableDescriptor}, FromFile, ToShareable};
+use super::{
+    descriptor::{Descriptor, ShareableDescriptor},
+    FromFile, ToShareable,
+};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq, Clone)]
 pub struct Modpack {

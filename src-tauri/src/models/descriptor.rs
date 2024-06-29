@@ -1,6 +1,4 @@
-use std::path::PathBuf;
 
-use tauri::http::version;
 use uuid::Uuid;
 
 use super::{HashTarget, ToShareable};

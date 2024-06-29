@@ -1,14 +1,10 @@
-use std::{
-    collections::HashMap,
-    fmt::format,
-    path::{Path, PathBuf},
-};
+use std::path::PathBuf;
 
 use crate::{
     launcher_state::LauncherInfo,
     models::{
         descriptor, hoidescriptor,
-        modpack::{self, Modpack},
+        modpack::Modpack,
         FromFile, HashTarget,
     },
 };
@@ -400,8 +396,7 @@ pub async fn get_mods(
         .mods
         .lock()
         .await
-        .values()
-        .map(|x| x.clone())
+        .values().cloned()
         .collect::<Vec<_>>())
 }
 
@@ -461,7 +456,7 @@ pub async fn get_modpack(
 ) -> Result<Modpack, String> {
     let modpacks = state.modpacks.lock().await;
 
-    let Some(modpack) = modpacks.get(&uuid).clone() else {
+    let Some(modpack) = modpacks.get(&uuid) else {
         error!("Modpack not found");
         return Err("Modpack not found".to_string());
     };

@@ -74,6 +74,8 @@ export const update_mods = async () => invoke("update_mods");
 export const update_modpacks = async () => invoke("update_modpacks");
 export const get_launcher_info = async (): Promise<LauncherInfo> => invoke("get_launcher_info");
 export const get_mods = async (): Promise<ModDescriptor[]> => invoke("get_mods");
+export const get_settings = async (): Promise<Settings> => invoke("get_settings");
+export const save_settings = async (settings: Settings): Promise<void> => invoke("save_settings", { settings });
 
 const find_file_with_extension = async (path: string, regexp: RegExp): Promise<string | null> => {
 	const files = await fs.readDir(path);

@@ -48,4 +48,5 @@ pub struct LauncherState {
     pub mods: std::sync::Mutex<Vec<crate::models::descriptor::Descriptor>>,
     pub modpacks: std::sync::Mutex<Vec<crate::models::modpack::Modpack>>,
     pub info: std::sync::Mutex<LauncherInfo>,
+    pub settings: std::sync::Mutex<crate::settings::Settings>,
 }

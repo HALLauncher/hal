@@ -63,6 +63,9 @@
 		<div class="info-container">
 			<img class="icon" src={icon ?? "/images/Ого.svg"} alt="" />
 			<div class="info">
+				<span class="mod-status">
+					{mod.remote_file_id ? "steam" : "local"}
+				</span>
 				<h3>{mod.name}</h3>
 				{#if mod.remote_file_id}
 					<span class="id">{mod.remote_file_id}</span>
@@ -96,6 +99,19 @@
 {/if}
 
 <style>
+	.mod-status {
+		background-color: #1f1f1f9f;
+
+		font-size: 12px;
+		border-radius: 6px;
+		
+		display: flex;
+		justify-content: center;
+		width: max-content;
+
+		padding: 0px 5px;
+	}
+
 	.moditem {
 		display: flex;
 		flex-direction: row;
@@ -117,8 +133,8 @@
 	}
 
 	.info-container .icon {
-		width: 54px;
-		height: 54px;
+		width: 70px;
+		height: 70px;
 
 		border-radius: 5px;
 	}
@@ -127,9 +143,9 @@
 		display: flex;
 		flex-direction: column;
 
-		gap: 5px;
+		gap: 1px;
 
-		font-size: 16px;
+		font-size: 18px;
 	}
 
 	.controls-container {
@@ -165,6 +181,6 @@
 	}
 
   .id {
-    font-size: 10px;
+    font-size: 12px;
   }
 </style>

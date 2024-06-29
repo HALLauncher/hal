@@ -48,6 +48,7 @@
 		</div>
 		<div class="content">
 			{#if page === SettingsPage.GameSettings}
+				<p></p>
 				<Checkbox label="Scratch balls" checked />
 				<Checkbox label="Eat rocks" checked />
 				<Checkbox label="Nill kiggers" />

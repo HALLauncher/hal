@@ -71,7 +71,7 @@
 		</div>
 		<div class="controls-container">
 			<div class="info-circle">
-				<i class="hal-ok"></i>
+				<i class="hal-exclamation"></i>
 			</div>
 			<div class="buttons">
 				<Button
@@ -79,7 +79,7 @@
 					--font-size="16px"
 					--btn-color="rgba(31, 31, 31, 0.44)"
 					--hover-color="rgba(160, 160, 160, 0.2)"
-					icon="hal-check"
+					icon="hal-upload"
 					>
 				</Button>
 				<Button
@@ -87,7 +87,7 @@
 					--font-size="16px"
 					--btn-color="rgba(31, 31, 31, 0.44)"
 					--hover-color="rgba(160, 160, 160, 0.2)"
-					icon="hal-settings"
+					icon="hal-open"
 					>
 				</Button>
 			</div>
@@ -151,7 +151,7 @@
 		background: #1F1F1F;
 		color: #fff;
 
-		font-size: 10px;
+		font-size: 12px;
 
 		opacity: .44;
 

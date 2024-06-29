@@ -31,3 +31,7 @@ pathdiff = "0.2.1"
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
 default = [ "custom-protocol" ]
 custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release.package.wry]
+debug = true
+debug-assertions = true

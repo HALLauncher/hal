@@ -258,7 +258,6 @@ pub async fn update_modpacks(
 }
 
 pub async fn apply_modpack(
-    app: tauri::AppHandle,
     state: tauri::State<'_, crate::launcher_state::LauncherState>,
     modpack: Uuid,
 ) -> Result<(), String> {
@@ -367,7 +366,7 @@ pub async fn start_game(
     match steam_dir.app(&394360) {
         Some(steamapp) => {
             if let Some(modpack) = modpack {
-                apply_modpack(app, state, modpack).await?;
+                apply_modpack(state, modpack).await?;
             }
             filesystem::start_game(&steamapp.path, options).await
         }
@@ -378,7 +377,7 @@ pub async fn start_game(
             };
 
             if let Some(modpack) = modpack {
-                apply_modpack(app, state, modpack).await?;
+                apply_modpack(state, modpack).await?;
             }
 
             filesystem::start_game(&folder, options).await

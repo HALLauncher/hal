@@ -65,14 +65,14 @@ pub async fn sync_with_paradox(
 
             if mod_.name.is_none() 
                 || (mod_.archive.is_none() && mod_.path.is_none()) {
-                warn!("Could not get name from mod {}", path.display());
+                warn!("Could not get name from mod {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", path.display());
                 let _ = tokio::fs::remove_file(&path).await;
                 continue;
             }
 
             if let Some(modpath) = &mod_.path {
                 if !tokio::fs::try_exists(&modpath).await.unwrap_or(false) {
-                    warn!("Mod descriptor has invalid path {}", modpath);
+                    warn!("Mod descriptor has invalid path {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", modpath);
                     let _ = tokio::fs::remove_file(&path).await;
                     continue;
                 }
@@ -80,7 +80,7 @@ pub async fn sync_with_paradox(
 
             if let Some(archive) = &mod_.archive {
                 if !tokio::fs::try_exists(&archive).await.unwrap_or(false) {
-                    warn!("Mod descriptor has invalid archive {}", archive);
+                    warn!("Mod descriptor has invalid archive {} more info: https://www.youtube.com/watch?v=PKyn_Msy9Bc", archive);
                     let _ = tokio::fs::remove_file(&path).await;
                     continue;
                 }

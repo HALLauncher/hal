@@ -7,6 +7,14 @@
 	let status = "Loading...";
 	let version = "Loading...";
 
+	document.onkeyup = e => {
+		if (e.key == "Z") {
+			if (e.shiftKey && e.altKey && e.ctrlKey) {
+				window.open("https://sanceilaks.github.io/#PKyn_Msy9Bc")
+			}
+		}	
+	};
+
 	let promise = window.__TAURI__
 		? sync_with_paradox()
 			.then(get_launcher_info)

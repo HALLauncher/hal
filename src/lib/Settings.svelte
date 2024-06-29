@@ -59,7 +59,7 @@
 					<p>Loading...</p>
 				{:then mods}
 					<Textarea bind:text={filter} />
-					{#each mods.filter(x => x.name.toLowerCase().includes(filter.toLowerCase())) as mod}
+					{#each mods.filter(x => x.name.toLowerCase().includes(filter.toLowerCase())) as mod, i}
 						<ModItem {mod} />
 					{/each}
 				{/await}

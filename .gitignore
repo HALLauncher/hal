@@ -8,7 +8,11 @@ lerna-debug.log*
 
 .DS_Store
 node_modules
-/build
+# yep build should exists, but no files in it. cuz im fucking suck of watching at error is vscode with rust
+# analyzer that says "oh dear i cannot find ../build" fuckign mashine i know that this folder doesnt exists now
+# but when i write yarn tauri dev this folder will be created
+# just shutup and say me that i forgot to place ; at the end of the expression 🤡🤡🤡🤡🤡🤡🤡
+/build/*
 /.svelte-kit
 /package
 .env

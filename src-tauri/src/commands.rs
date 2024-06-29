@@ -61,7 +61,7 @@ pub async fn sync_with_paradox(
         };
 
         if let Ok(mod_) = hoidescriptor::HoiDescriptor::from_file(&path) {
-            info!("Found mod: {:#?}", mod_);
+            info!("Found mod: {:?}", mod_);
 
             if mod_.name.is_none() 
                 || (mod_.archive.is_none() && mod_.path.is_none()) {

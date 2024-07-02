@@ -14,3 +14,7 @@ Modern fast and opensource replacement of [Hearts of Iron IV](https://store.stea
 - [ ] CreamAPI integration
 - [x] (for now partial) Compatibility with original launcher
 - [ ] Wokrshop browser
+
+## Contributing
+
+If you want to contribute, you can look at the issues or on TODO comments in code.

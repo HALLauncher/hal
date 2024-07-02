@@ -1,22 +1,16 @@
 [![built with Codeium](https://codeium.com/badges/main)](https://codeium.com)
 
 # Hoi4 Alternative Loader (HAL)
-My attempt to create alternative loader for [Hearts of Iron IV](https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/) and other paradox games
+Modern fast and opensource replacement of [Hearts of Iron IV](https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/) game launcher written in Rust
 
-# Build and Run
-
-* Init
-```
-yarn
-```
-* Build
-```
-yarn tauri build
-```
-* Run
-```
-yarn tauri dev
-```
-
-# Design
-https://www.figma.com/file/6Qoi06eiCu1F9POK5MPEbR/hal
+## Todo
+- [x] Mods support
+- [x] "In launcher" game settings
+- [ ] Modpacks support
+- [ ] Game settings support
+- [ ] Modpack sharing via file
+- [ ] Modpack sharing via URL
+- [ ] Tools for modding
+- [ ] CreamAPI integration
+- [x] (for now partial) Compatibility with original launcher
+- [ ] Wokrshop browser

@@ -69,7 +69,7 @@
 				{#await modPackPromise}
 					<p>Loading...</p>
 				{:then modpacks}
-					<Textarea bind:text={filter} />
+					<!-- <Textarea bind:text={filter} /> -->
 					{#each modpacks.filter(x => x.name.toLowerCase().includes(filter.toLowerCase())) as modpack, i}
 						<!-- <p on:click={() => {
 							start_game([], modpack.uuid).catch(e => console.error(e));

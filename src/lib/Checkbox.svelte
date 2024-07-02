@@ -43,7 +43,7 @@
 		transition: .2s;
 
 		font-family: 'hal-icons';
-		--check-char: "\E801";
+		--check-char: "\F8003";
 	}
 
 	.container:hover input ~ .checkmark {

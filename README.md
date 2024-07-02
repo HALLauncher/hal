@@ -12,7 +12,7 @@ Modern fast and opensource replacement of [Hearts of Iron IV](https://store.stea
 - [ ] Modpack sharing via URL
 - [ ] Tools for modding
 - [ ] CreamAPI integration
-- [x] (for now partial) Compatibility with original launcher
+- [x] (partial) Compatibility with original launcher
 - [ ] Wokrshop browser
 
 ## Contributing

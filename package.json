@@ -12,7 +12,8 @@
 	},
 	"dependencies": {
 		"@tauri-apps/api": "^1",
-		"jomini": "^0.9.1"
+		"jomini": "^0.9.1",
+		"yarn": "^1.22.22"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",

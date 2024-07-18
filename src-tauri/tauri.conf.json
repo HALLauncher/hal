@@ -53,7 +53,8 @@
 				"signingIdentity": null
 			},
 			"resources": [
-				"steam_api64.dll"
+				"steam_api64.dll",
+        "libsteam_api.so"
 			],
 			"shortDescription": "",
 			"targets": "all",

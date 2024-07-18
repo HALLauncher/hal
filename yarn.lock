@@ -97,7 +97,7 @@
 
 "@esbuild/linux-x64@0.20.2":
   version "0.20.2"
-  resolved "https://registry.yarnpkg.com/@esbuild/linux-x64/-/linux-x64-0.20.2.tgz#86eca35203afc0d9de0694c64ec0ab0a378f6fff"
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.20.2.tgz"
   integrity sha512-1MdwI6OOTsfQfek8sLwgyjOXAu+wKhLEoaOLTjbijk6E2WONYpH9ZU2mNtR+lZ2B4uwr+usqGuVfFT9tMtGvGw==
 
 "@esbuild/netbsd-x64@0.20.2":
@@ -127,7 +127,7 @@
 
 "@esbuild/win32-x64@0.20.2":
   version "0.20.2"
-  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.20.2.tgz"
+  resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.20.2.tgz#9c907b21e30a52db959ba4f80bb01a0cc403d5cc"
   integrity sha512-N49X4lJX27+l9jbLKSqZ6bKNjzQvHaT8IIFUy+YIqmXQdjYCToGWwOItDrfby14c78aDd5NHQl29xingXfCdLQ==
 
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
@@ -291,7 +291,7 @@
 
 "@rollup/rollup-linux-x64-gnu@4.14.1":
   version "4.14.1"
-  resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.14.1.tgz#0aaf79e5b9ccf7db3084fe6c3f2d2873a27d5af4"
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.14.1.tgz"
   integrity sha512-9Q7DGjZN+hTdJomaQ3Iub4m6VPu1r94bmK2z3UeWP3dGUecRC54tmVu9vKHTm1bOt3ASoYtEz6JSRLFzrysKlA==
 
 "@rollup/rollup-linux-x64-musl@4.14.1":
@@ -311,7 +311,7 @@
 
 "@rollup/rollup-win32-x64-msvc@4.14.1":
   version "4.14.1"
-  resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.14.1.tgz"
+  resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.14.1.tgz#299eee74b7d87e116083ac5b1ce8dd9434668294"
   integrity sha512-wQGI+LY/Py20zdUPq+XCem7JcPOyzIJBm3dli+56DJsQOHbnXZFEwgmnC6el1TPAfC8lBT3m+z69RmLykNUbew==
 
 "@sveltejs/adapter-auto@^3.0.0":
@@ -396,7 +396,7 @@
 
 "@tauri-apps/cli-linux-x64-gnu@1.5.11":
   version "1.5.11"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-linux-x64-gnu/-/cli-linux-x64-gnu-1.5.11.tgz#17323105e3863a3f36d51771e642e489037ba59b"
+  resolved "https://registry.npmjs.org/@tauri-apps/cli-linux-x64-gnu/-/cli-linux-x64-gnu-1.5.11.tgz"
   integrity sha512-MTVXLi89Nj7Apcvjezw92m7ZqIDKT5SFKZtVPCg6RoLUBTzko/BQoXYIRWmdoz2pgkHDUHgO2OMJ8oKzzddXbw==
 
 "@tauri-apps/cli-linux-x64-musl@1.5.11":
@@ -416,7 +416,7 @@
 
 "@tauri-apps/cli-win32-x64-msvc@1.5.11":
   version "1.5.11"
-  resolved "https://registry.npmjs.org/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-1.5.11.tgz"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-1.5.11.tgz#c003ce00b36d056a8b08e0ecf4633c2bba00c497"
   integrity sha512-1CexcqUFCis5ypUIMOKllxUBrna09McbftWENgvVXMfA+SP+yPDPAVb8fIvUcdTIwR/yHJwcIucmTB4anww4vg==
 
 "@tauri-apps/cli@^1.5.11":
@@ -1795,6 +1795,11 @@ yaml@^1.10.2:
   version "1.10.2"
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.2.tgz"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
+
+yarn@^1.22.22:
+  version "1.22.22"
+  resolved "https://registry.npmjs.org/yarn/-/yarn-1.22.22.tgz"
+  integrity sha512-prL3kGtyG7o9Z9Sv8IPfBNrWTDmXB4Qbes8A9rEzt6wkJV8mUvoirjU0Mp3GGAU06Y0XQyA3/2/RQFVuK7MTfg==
 
 yocto-queue@^0.1.0:
   version "0.1.0"

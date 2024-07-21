@@ -60,13 +60,10 @@ pub async fn sync_with_paradox(
         let descriptor = path
             .read_dir()
             .unwrap()
-            .filter(|x| x.is_ok())
-            .map(|x| x.unwrap())
+            .flatten()
             .filter(|x| x.path().is_file())
             .map(|x| x.path())
-            .filter(|x| x.extension().is_some())
-            .filter(|x| x.extension().unwrap().to_str().unwrap().eq("mod"))
-            .next();
+            .filter(|x| x.extension().is_some()).find(|x| x.extension().unwrap().to_str().unwrap().eq("mod"));
 
         if descriptor.is_none() {
             warn!("Item {} was received but no descriptor was found in {:#?}", item.id, path.display());

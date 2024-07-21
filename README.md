@@ -1,6 +1,6 @@
 [![built with Codeium](https://codeium.com/badges/main)](https://codeium.com)
 
-# Hoi4 Alternative Loader (HAL)
+# Hoi4 Alternative Launcher (HAL)
 Modern fast and opensource replacement of [Hearts of Iron IV](https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/) game launcher written in Rust
 
 ## Todo

@@ -10,7 +10,7 @@
 	document.onkeyup = e => {
 		if (e.key == "Z") {
 			if (e.shiftKey && e.altKey && e.ctrlKey) {
-				window.open("https://sanceilaks.github.io/#PKyn_Msy9Bc")
+				window.open("https://sanceilaks.github.io/#PKyn_Msy9Bc");
 			}
 		}	
 	};
